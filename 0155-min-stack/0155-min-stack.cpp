@@ -3,10 +3,16 @@ public:
     stack<int> values, minimums;
 
     MinStack() {
+
     }
     
     void push(int val) {
-        
+      values.push(val);
+      int previous_min = val;
+      if (!minimums.empty()){
+        previous_min = minimums.top();
+      }
+      minimums.push(min(val,previous_min));
     }
     
     void pop() {
