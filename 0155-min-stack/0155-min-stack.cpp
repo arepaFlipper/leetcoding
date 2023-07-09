@@ -16,7 +16,8 @@ public:
     }
     
     void pop() {
-        
+      values.pop();  
+      minimums.pop();
     }
     
     int top() {
