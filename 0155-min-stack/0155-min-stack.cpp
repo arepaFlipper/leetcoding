@@ -21,7 +21,7 @@ public:
     }
     
     int top() {
-        
+      return values.top();
     }
     
     int getMin() {
