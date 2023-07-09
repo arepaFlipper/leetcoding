@@ -25,7 +25,7 @@ public:
       }
     }
 
-    while (q.empty()) {
+    while (!q.empty()) {
       std::pair<int, int> cur = q.front();
       q.pop();
       for (int d = 0; d < 4; ++d) {
@@ -54,7 +54,6 @@ public:
         }
       }
     }
-
     return answer;
   }
 };
