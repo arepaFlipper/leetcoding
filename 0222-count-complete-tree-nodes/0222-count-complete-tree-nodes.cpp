@@ -33,13 +33,13 @@ public:
 
     int depth = 0;
     TreeNode* depth_seeker = root;
-    while (depth_seeker != nullptr) {
+    while (depth_seeker -> left != nullptr) {
       depth++;
       depth_seeker = depth_seeker->left;
     }
  
 
-    int l = 0, r = (l << depth);
+    int l = 0, r = (1 << depth);
     while (l < r) {
       int m = (l + r) / 2;
 
