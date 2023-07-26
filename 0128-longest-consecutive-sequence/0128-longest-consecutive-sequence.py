@@ -1,21 +1,13 @@
 class Solution:
     def longestConsecutive(self, nums: List[int]) -> int:
-        hash_map: Dict = {}
-        for (idx, num) in enumerate(nums):
-            print("(idx,num)",idx, num) ## DELETEME:
-            hash_map[num]=True
-
-        print("hash_map:",hash_map) ## DELETEME:
-        res = 0
-        for (key,value) in hash_map.items():
-            count = 0
-            print("key:",key) ## DELETEME:
-            for i in range(key, len(nums)+1):
-                print(i,"in hash_map",i in hash_map) ## DELETEME:
-                if i in hash_map:
-                    count += 1
-                else:
-                    break
-            if count > res:
-                res= count
-        return res
+        numSet = set(nums)
+        print("numSet:",numSet) ## DELETEME:
+        longest = 0
+        for n in nums:
+            if (n-1) not in nums:
+                length = 0
+                while (n+length) in nums:
+                    length += 1
+                if length > longest:
+                    longest = length
+        return longest
