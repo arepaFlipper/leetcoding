@@ -57,3 +57,9 @@ If you have any questions or suggestions, feel free to contact me at your.email@
 Happy coding! :rocket:
 
 You can customize this template to your specific needs, add badges, links, and any other information you find relevant. Be sure to keep your README up-to-date as you continue to solve daily problems on LeetCode.
+
+## Filter the `problemsSiteData.json`
+
+```
+❯ jq 'map(select(.neetcode150 == true and .pattern == "Linked List")) | sort_by(.difficulty | if . == "Easy" then 0 elif . == "Medium" then 1 else 2 end)' problemSiteData.json
+```
