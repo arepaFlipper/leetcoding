@@ -7,11 +7,9 @@ class TreeNode:
 
 class Solution:
     def maxDepth(self, root):
-        if not root:
-            return 0
         
-        res = 1
-        stack = [[root, res]]
+        res = 0
+        stack = [[root, res + 1]]
 
         while stack:
             (node, depth) = stack.pop()
