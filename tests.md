@@ -1,49 +1,54 @@
 I want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
 
 
-  235. Lowest Common Ancestor of a Binary Search Tree  
-  Given a binary search tree (BST), find the lowest common ancestor (LCA) node of two given nodes in the BST.  
-  According to the definition of LCA on Wikipedia: &ldquo;The lowest common ancestor is defined between two nodes p and q as the lowest node in T that has both p and q as descendants (where we allow a node to be a descendant of itself).&rdquo;  
+
+  102. Binary Tree Level Order Traversal  
+  Given the root of a binary tree, return the level order traversal of its nodes' values. (i.e., from left to right, level by level).  
      
   Example 1:  
-  https://assets.leetcode.com/uploads/2018/12/14/binarysearchtree_improved.png  
-  Input: root = [6,2,8,0,4,7,9,null,null,3,5], p = 2, q = 8  
-  Output: 6  
-  Explanation: The LCA of nodes 2 and 8 is 6.  
+  https://assets.leetcode.com/uploads/2021/02/19/tree1.jpg  
+  Input: root = [3,9,20,null,null,15,7]  
+  Output: [[3],[9,20],[15,7]]  
   Example 2:  
-  https://assets.leetcode.com/uploads/2018/12/14/binarysearchtree_improved.png  
-  Input: root = [6,2,8,0,4,7,9,null,null,3,5], p = 2, q = 4  
-  Output: 2  
-  Explanation: The LCA of nodes 2 and 4 is 2, since a node can be a descendant of itself according to the LCA definition.  
+  Input: root = [1]  
+  Output: [[1]]  
   Example 3:  
-  Input: root = [2,1], p = 2, q = 1  
-  Output: 2  
+  Input: root = []  
+  Output: []  
      
   Constraints:  
-  	The number of nodes in the tree is in the range [2, 105].  
-  	-109 <= Node.val <= 109  
-  	All Node.val are unique.  
-  	p != q  
-  	p and q will exist in the BST.  
+  	The number of nodes in the tree is in the range [0, 2000].  
+  	-1000 <= Node.val <= 1000  
+
 
 The following is my solution to test:
 
 ```
 # Definition for a binary tree node.
 # class TreeNode:
-#     def __init__(self, x):
-#         self.val = x
-#         self.left = None
-#         self.right = None
-class Solution:
-    def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
-        current = root
-        while current:
-            if (p.val > current.val) and (q.val > current.val):
-                current = current.right
-            elif (p.val < current.val) and (q.val < current.val): 
-                current = current.left
-            else:
-                return current
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
 
+from collections import deque
+
+class Solution:
+    def levelOrder(self, root: Optional[TreeNode]) -> List[List[int]]:
+        res = []
+        queue = deque()
+        queue.append(root)
+
+        while queue:
+            queue_length = len(queue)
+            level = []
+            for i in range(queue_length):
+                node = queue.popleft()
+                if node:
+                    level.append(node.val)
+                    queue.append(node.left)
+                    queue.append(node.right)
+            if level:
+                res.append(level)
+        return res
 ```
