@@ -1,26 +1,34 @@
 I want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
 
 
-  199. Binary Tree Right Side View  
-  Given the root of a binary tree, imagine yourself standing on the right side of it, return the values of the nodes you can see ordered from top to bottom.  
+  1448. Count Good Nodes in Binary Tree  
+  Given a binary tree root, a node X in the tree is named good if in the path from root to X there are no nodes with a value greater than X.  
+  Return the number of good nodes in the binary tree.  
      
   Example 1:  
-  https://assets.leetcode.com/uploads/2021/02/14/tree.jpg  
-  Input: root = [1,2,3,null,5,null,4]  
-  Output: [1,3,4]  
+  https://assets.leetcode.com/uploads/2020/04/02/test_sample_1.png  
+  Input: root = [3,1,4,3,null,1,5]  
+  Output: 4  
+  Explanation: Nodes in blue are good.  
+  Root Node (3) is always a good node.  
+  Node 4 -> (3,4) is the maximum value in the path starting from the root.  
+  Node 5 -> (3,4,5) is the maximum value in the path  
+  Node 3 -> (3,1,3) is the maximum value in the path.  
   Example 2:  
-  Input: root = [1,null,3]  
-  Output: [1,3]  
+  https://assets.leetcode.com/uploads/2020/04/02/test_sample_2.png  
+  Input: root = [3,3,null,4,2]  
+  Output: 3  
+  Explanation: Node 2 -> (3, 3, 2) is not good, because "3" is higher than it.  
   Example 3:  
-  Input: root = []  
-  Output: []  
+  Input: root = [1]  
+  Output: 1  
+  Explanation: Root is considered as good.  
      
   Constraints:  
-  	The number of nodes in the tree is in the range [0, 100].  
-  	-100 <= Node.val <= 100  
+  	The number of nodes in the binary tree is in the range [1, 10^5].  
+  	Each node's value is between [-10^4, 10^4].  
 
 The following is my solution to test:
-
 ```
 # Definition for a binary tree node.
 # class TreeNode:
@@ -28,26 +36,17 @@ The following is my solution to test:
 #         self.val = val
 #         self.left = left
 #         self.right = right
-from collections import deque
-
 class Solution:
-    def rightSideView(self, root: Optional[TreeNode]) -> List[int]:
-        res = []
-        queue = deque([root])
+    def goodNodes(self, root: TreeNode) -> int:
+        def depth_first_search(node, max_val):
+            if not node:
+                return 0
+            
+            res = 1 if node.val >= max_val else 0
+            max_val = max(node.val,max_val)
+            res += depth_first_search(node.right, max_val)
+            res += depth_first_search(node.left, max_val)
+            return res
         
-        while queue:
-            right_side = None
-            queue_length = len(queue)
-
-            for idx in range(queue_length):
-                node = queue.popleft()
-                if node:
-                    right_side = node
-                    queue.append(node.left)
-                    queue.append(node.right)
-
-            if right_side:
-                res.append(right_side.val)
-
-        return res
+        return depth_first_search(root, root.val)
 ```
