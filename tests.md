@@ -1,25 +1,23 @@
 I want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
 
 
-
-  102. Binary Tree Level Order Traversal  
-  Given the root of a binary tree, return the level order traversal of its nodes' values. (i.e., from left to right, level by level).  
+  199. Binary Tree Right Side View  
+  Given the root of a binary tree, imagine yourself standing on the right side of it, return the values of the nodes you can see ordered from top to bottom.  
      
   Example 1:  
-  https://assets.leetcode.com/uploads/2021/02/19/tree1.jpg  
-  Input: root = [3,9,20,null,null,15,7]  
-  Output: [[3],[9,20],[15,7]]  
+  https://assets.leetcode.com/uploads/2021/02/14/tree.jpg  
+  Input: root = [1,2,3,null,5,null,4]  
+  Output: [1,3,4]  
   Example 2:  
-  Input: root = [1]  
-  Output: [[1]]  
+  Input: root = [1,null,3]  
+  Output: [1,3]  
   Example 3:  
   Input: root = []  
   Output: []  
      
   Constraints:  
-  	The number of nodes in the tree is in the range [0, 2000].  
-  	-1000 <= Node.val <= 1000  
-
+  	The number of nodes in the tree is in the range [0, 100].  
+  	-100 <= Node.val <= 100  
 
 The following is my solution to test:
 
@@ -30,25 +28,26 @@ The following is my solution to test:
 #         self.val = val
 #         self.left = left
 #         self.right = right
-
 from collections import deque
 
 class Solution:
-    def levelOrder(self, root: Optional[TreeNode]) -> List[List[int]]:
+    def rightSideView(self, root: Optional[TreeNode]) -> List[int]:
         res = []
-        queue = deque()
-        queue.append(root)
-
+        queue = deque([root])
+        
         while queue:
+            right_side = None
             queue_length = len(queue)
-            level = []
-            for i in range(queue_length):
+
+            for idx in range(queue_length):
                 node = queue.popleft()
                 if node:
-                    level.append(node.val)
+                    right_side = node
                     queue.append(node.left)
                     queue.append(node.right)
-            if level:
-                res.append(level)
+
+            if right_side:
+                res.append(right_side.val)
+
         return res
 ```
