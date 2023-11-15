@@ -1,26 +1,24 @@
 I want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
 
-
-  98. Validate Binary Search Tree  
-  Given the root of a binary tree, determine if it is a valid binary search tree (BST).  
-  A valid BST is defined as follows:  
-  	The left subtree of a node contains only nodes with keys less than the node's key.  
-  	The right subtree of a node contains only nodes with keys greater than the node's key.  
-  	Both the left and right subtrees must also be binary search trees.  
+  230. Kth Smallest Element in a BST  
+  Given the root of a binary search tree, and an integer k, return the kth smallest value (1-indexed) of all the values of the nodes in the tree.  
      
   Example 1:  
-  https://assets.leetcode.com/uploads/2020/12/01/tree1.jpg  
-  Input: root = [2,1,3]  
-  Output: true  
+  https://assets.leetcode.com/uploads/2021/01/28/kthtree1.jpg  
+  Input: root = [3,1,4,null,2], k = 1  
+  Output: 1  
   Example 2:  
-  https://assets.leetcode.com/uploads/2020/12/01/tree2.jpg  
-  Input: root = [5,1,4,null,null,3,6]  
-  Output: false  
-  Explanation: The root node's value is 5 but its right child's value is 4.  
+  https://assets.leetcode.com/uploads/2021/01/28/kthtree2.jpg  
+  Input: root = [5,3,6,2,4,null,null,1], k = 3  
+  Output: 3  
      
   Constraints:  
-  	The number of nodes in the tree is in the range [1, 104].  
-  	-231 <= Node.val <= 231 - 1  
+  	The number of nodes in the tree is n.  
+  	1 <= k <= n <= 104  
+  	0 <= Node.val <= 104  
+     
+  Follow up: If the BST is modified often (i.e., we can do insert and delete operations) and you need to find the kth smallest frequently, how would you optimize?  
+
 
 The following is my solution to test:
 ```
@@ -31,15 +29,17 @@ The following is my solution to test:
 #         self.left = left
 #         self.right = right
 class Solution:
-    def isValidBST(self, root: Optional[TreeNode]) -> bool:
-        def validate(node: Optional[TreeNode], link: int, recht: int) -> bool:
-            if not node:
-                return True
-            
-            if not(link < node.val < recht):
-                return False
-            
-            return validate(node.left,link,node.val) and validate(node.right, node.val, recht)
-        
-        return validate(root, float('-INF'),float('INF'))
+    def kthSmallest(self, root: Optional[TreeNode], k: int) -> int:
+        stack = []
+        current = root
+
+        while stack or current:
+            while current:
+                stack.append(current)
+                current = current.left
+            current = stack.pop()
+            k -= 1
+            if (k==0):
+                return current.val
+            current = current.right
 ```
