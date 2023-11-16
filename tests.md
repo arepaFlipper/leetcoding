@@ -1,23 +1,24 @@
 I want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
 
-  230. Kth Smallest Element in a BST  
-  Given the root of a binary search tree, and an integer k, return the kth smallest value (1-indexed) of all the values of the nodes in the tree.  
+  105. Construct Binary Tree from Preorder and Inorder Traversal  
+  Given two integer arrays preorder and inorder where preorder is the preorder traversal of a binary tree and inorder is the inorder traversal of the same tree, construct and return the binary tree.  
      
   Example 1:  
-  https://assets.leetcode.com/uploads/2021/01/28/kthtree1.jpg  
-  Input: root = [3,1,4,null,2], k = 1  
-  Output: 1  
+  https://assets.leetcode.com/uploads/2021/02/19/tree.jpg  
+  Input: preorder = [3,9,20,15,7], inorder = [9,3,15,20,7]  
+  Output: [3,9,20,null,null,15,7]  
   Example 2:  
-  https://assets.leetcode.com/uploads/2021/01/28/kthtree2.jpg  
-  Input: root = [5,3,6,2,4,null,null,1], k = 3  
-  Output: 3  
+  Input: preorder = [-1], inorder = [-1]  
+  Output: [-1]  
      
   Constraints:  
-  	The number of nodes in the tree is n.  
-  	1 <= k <= n <= 104  
-  	0 <= Node.val <= 104  
-     
-  Follow up: If the BST is modified often (i.e., we can do insert and delete operations) and you need to find the kth smallest frequently, how would you optimize?  
+  	1 <= preorder.length <= 3000  
+  	inorder.length == preorder.length  
+  	-3000 <= preorder[i], inorder[i] <= 3000  
+  	preorder and inorder consist of unique values.  
+  	Each value of inorder also appears in preorder.  
+  	preorder is guaranteed to be the preorder traversal of the tree.  
+  	inorder is guaranteed to be the inorder traversal of the tree.  
 
 
 The following is my solution to test:
@@ -29,17 +30,21 @@ The following is my solution to test:
 #         self.left = left
 #         self.right = right
 class Solution:
-    def kthSmallest(self, root: Optional[TreeNode], k: int) -> int:
-        stack = []
-        current = root
+    def buildTree(self, preorder: List[int], inorder: List[int]) -> Optional[TreeNode]:
+        if not preorder or not inorder:
+            return None
+        # The first value on Preorder traversal is the root
+        root = TreeNode(preorder[0])
 
-        while stack or current:
-            while current:
-                stack.append(current)
-                current = current.left
-            current = stack.pop()
-            k -= 1
-            if (k==0):
-                return current.val
-            current = current.right
+        # Find the root value inorder list
+        middle_idx = inorder.index(preorder[0])
+        # values after the middle_idx index are nodes from the left subtree
+
+        # Recursive
+        root.left = self.buildTree(preorder[1:middle_idx+1], inorder[:middle_idx])
+        root.right = self.buildTree(preorder[middle_idx+1:], inorder[middle_idx+1:])
+        return root
+        
+# Preorder traversal: it takes the node's value from left "←" position (red)
+# Inorder traversal: it takes the node's value from down "↓" direction (green)
 ```
