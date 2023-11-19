@@ -1,78 +1,87 @@
 I want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
 
- 297. Serialize and Deserialize Binary Tree 
- Serialization is the process of converting a data structure or object into a sequence of bits so that it can be stored in a file or memory buffer, or transmitted across a network connection link to be reconstructed later in the same or another computer environment. 
- Design an algorithm to serialize and deserialize a binary tree. There is no restriction on how your serialization/deserialization algorithm should work. You just need to ensure that a binary tree can be serialized to a string and this string can be deserialized to the original tree structure. 
- Clarification: The input/output format is the same as how LeetCode serializes a binary tree. You do not necessarily need to follow this format, so please be creative and come up with different approaches yourself. 
-   
- Example 1: 
- https://assets.leetcode.com/uploads/2020/09/15/serdeser.jpg 
- Input: root = [1,2,3,null,null,4,5] 
- Output: [1,2,3,null,null,4,5] 
- Example 2: 
- Input: root = [] 
- Output: [] 
-   
- Constraints: 
- 	The number of nodes in the tree is in the range [0, 104]. 
- 	-1000 <= Node.val <= 1000 
-
+  208. Implement Trie (Prefix Tree)  
+  A trie (pronounced as "try") or prefix tree is a tree data structure used to efficiently store and retrieve keys in a dataset of strings. There are various applications of this data structure, such as autocomplete and spellchecker.  
+  Implement the Trie class:  
+  	Trie() Initializes the trie object.  
+  	void insert(String word) Inserts the string word into the trie.  
+  	boolean search(String word) Returns true if the string word is in the trie (i.e., was inserted before), and false otherwise.  
+  	boolean startsWith(String prefix) Returns true if there is a previously inserted string word that has the prefix prefix, and false otherwise.  
+     
+  Example 1:  
+  Input  
+  ["Trie", "insert", "search", "search", "startsWith", "insert", "search"]  
+  [[], ["apple"], ["apple"], ["app"], ["app"], ["app"], ["app"]]  
+  Output  
+  [null, null, true, false, true, null, true]  
+  Explanation  
+  Trie trie = new Trie();  
+  trie.insert("apple");  
+  trie.search("apple");   // return True  
+  trie.search("app");     // return False  
+  trie.startsWith("app"); // return True  
+  trie.insert("app");  
+  trie.search("app");     // return True  
+     
+  Constraints:  
+  	1 <= word.length, prefix.length <= 2000  
+  	word and prefix consist only of lowercase English letters.  
+  	At most 3 * 104 calls in total will be made to insert, search, and startsWith.  
 
 The following is my solution to test:
 ```
-# Definition for a binary tree node.
-# class TreeNode(object):
-#     def __init__(self, x):
-#         self.val = x
-#         self.left = None
-#         self.right = None
+class TrieNode:
+    def __init__(self):
+        self.children = [None] * 26
+        self.end = False
 
-class Codec:
-    def serialize(self, root):
-        """Encodes a tree to a single string.
-        
-        :type root: TreeNode
-        :rtype: str
+
+class Trie:
+    def __init__(self):
         """
-        res = []
-        
-        def depth_first_search(node):
-            if not node:
-                res.append("#")
-                return 
-            value = str(node.val)
-            res.append(value)
-            depth_first_search(node.left)
-            depth_first_search(node.right)
-
-        depth_first_search(root)
-        return ",".join(res)
-        
-    def deserialize(self, data):
-        """Decodes your encoded data to tree.
-        
-        :type data: str
-        :rtype: TreeNode
+        Initialize your data structure here.
         """
-        values = data.split(",")
-        self.i = 0
+        self.root = TrieNode()
 
-        def depth_1st_search():
-            if values[self.i] == "#":
-                self.i += 1
-                return None
-            
-            value = int(values[self.i])
-            node = TreeNode(value)
-            self.i += 1
-            node.left = depth_1st_search()
-            node.right = depth_1st_search()
+    def insert(self, word: str) -> None:
+        """
+        Inserts a word into the trie.
+        """
+        curr = self.root
+        for c in word:
+            i = ord(c) - ord("a")
+            if curr.children[i] == None:
+                curr.children[i] = TrieNode()
+            curr = curr.children[i]
+        curr.end = True
 
-            return node
-        return depth_1st_search()
+    def search(self, word: str) -> bool:
+        """
+        Returns if the word is in the trie.
+        """
+        curr = self.root
+        for c in word:
+            i = ord(c) - ord("a")
+            if curr.children[i] == None:
+                return False
+            curr = curr.children[i]
+        return curr.end
 
-# Your Codec object will be instantiated and called as such:
-# ser = Codec()
-# deser = Codec()
-# ans = deser.deserialize(ser.serialize(root))
+    def startsWith(self, prefix: str) -> bool:
+        """
+        Returns if there is any word in the trie that starts with the given prefix.
+        """
+        curr = self.root
+        for c in prefix:
+            i = ord(c) - ord("a")
+            if curr.children[i] == None:
+                return False
+            curr = curr.children[i]
+        return True
+
+# Your Trie object will be instantiated and called as such:
+# obj = Trie()
+# obj.insert(word)
+# param_2 = obj.search(word)
+# param_3 = obj.startsWith(prefix)
 ```
