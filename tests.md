@@ -1,34 +1,27 @@
 I want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
 
- 211. Design Add and Search Words Data Structure 
- Design a data structure that supports adding new words and finding if a string matches any previously added string. 
- Implement the WordDictionary class: 
- 	WordDictionary() Initializes the object. 
- 	void addWord(word) Adds word to the data structure, it can be matched later. 
- 	bool search(word) Returns true if there is any string in the data structure that matches word or false otherwise. word may contain dots '.' where dots can be matched with any letter. 
-   
- Example: 
- Input 
- ["WordDictionary","addWord","addWord","addWord","search","search","search","search"] 
- [[],["bad"],["dad"],["mad"],["pad"],["bad"],[".ad"],["b.."]] 
- Output 
- [null,null,null,null,false,true,true,true] 
- Explanation 
- WordDictionary wordDictionary = new WordDictionary(); 
- wordDictionary.addWord("bad"); 
- wordDictionary.addWord("dad"); 
- wordDictionary.addWord("mad"); 
- wordDictionary.search("pad"); // return False 
- wordDictionary.search("bad"); // return True 
- wordDictionary.search(".ad"); // return True 
- wordDictionary.search("b.."); // return True 
-   
- Constraints: 
- 	1 <= word.length <= 25 
- 	word in addWord consists of lowercase English letters. 
- 	word in search consist of '.' or lowercase English letters. 
- 	There will be at most 2 dots in word for search queries. 
- 	At most 104 calls will be made to addWord and search. 
+  212. Word Search II  
+  Given an m x n board of characters and a list of strings words, return all words on the board.  
+  Each word must be constructed from letters of sequentially adjacent cells, where adjacent cells are horizontally or vertically neighboring. The same letter cell may not be used more than once in a word.  
+     
+  Example 1:  
+  https://assets.leetcode.com/uploads/2020/11/07/search1.jpg  
+  Input: board = [["o","a","a","n"],["e","t","a","e"],["i","h","k","r"],["i","f","l","v"]], words = ["oath","pea","eat","rain"]  
+  Output: ["eat","oath"]  
+  Example 2:  
+  https://assets.leetcode.com/uploads/2020/11/07/search2.jpg  
+  Input: board = [["a","b"],["c","d"]], words = ["abcb"]  
+  Output: []  
+     
+  Constraints:  
+  	m == board.length  
+  	n == board[i].length  
+  	1 <= m, n <= 12  
+  	board[i][j] is a lowercase English letter.  
+  	1 <= words.length <= 3 * 104  
+  	1 <= words[i].length <= 10  
+  	words[i] consists of lowercase English letters.  
+  	All the strings of words are unique.  
 
 The following is my solution to test:
 ```
