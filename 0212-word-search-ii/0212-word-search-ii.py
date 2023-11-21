@@ -34,11 +34,11 @@ class Solution:
         def dfs(r,c,node,word):
             value = board[r][c]
             if (
-                r not in range(ROWS) or
-                c not in range(COLS) or
-                value not in node.children or
-                node.children[value].refs < 1 or
-                (r,c) in visit
+                r not in range(ROWS) 
+                or c not in range(COLS) 
+                or value not in node.children 
+                or node.children[value].refs < 1 
+                or (r,c) in visit
             ):
                 return
 
