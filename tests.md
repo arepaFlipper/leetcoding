@@ -1,43 +1,43 @@
 I want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
 
-  1046. Last Stone Weight  
-  You are given an array of integers stones where stones[i] is the weight of the ith stone.  
-  We are playing a game with the stones. On each turn, we choose the heaviest two stones and smash them together. Suppose the heaviest two stones have weights x and y with x <= y. The result of this smash is:  
-  	If x == y, both stones are destroyed, and  
-  	If x != y, the stone of weight x is destroyed, and the stone of weight y has new weight y - x.  
-  At the end of the game, there is at most one stone left.  
-  Return the weight of the last remaining stone. If there are no stones left, return 0.  
+  973. K Closest Points to Origin  
+  Given an array of points where points[i] = [xi, yi] represents a point on the X-Y plane and an integer k, return the k closest points to the origin (0, 0).  
+  The distance between two points on the X-Y plane is the Euclidean distance (i.e., &radic;(x1 - x2)2 + (y1 - y2)2).  
+  You may return the answer in any order. The answer is guaranteed to be unique (except for the order that it is in).  
      
   Example 1:  
-  Input: stones = [2,7,4,1,8,1]  
-  Output: 1  
-  Explanation:   
-  We combine 7 and 8 to get 1 so the array converts to [2,4,1,1,1] then,  
-  we combine 2 and 4 to get 2 so the array converts to [2,1,1,1] then,  
-  we combine 2 and 1 to get 1 so the array converts to [1,1,1] then,  
-  we combine 1 and 1 to get 0 so the array converts to [1] then that's the value of the last stone.  
+  https://assets.leetcode.com/uploads/2021/03/03/closestplane1.jpg  
+  Input: points = [[1,3],[-2,2]], k = 1  
+  Output: [[-2,2]]  
+  Explanation:  
+  The distance between (1, 3) and the origin is sqrt(10).  
+  The distance between (-2, 2) and the origin is sqrt(8).  
+  Since sqrt(8) < sqrt(10), (-2, 2) is closer to the origin.  
+  We only want the closest k = 1 points from the origin, so the answer is just [[-2,2]].  
   Example 2:  
-  Input: stones = [1]  
-  Output: 1  
+  Input: points = [[3,3],[5,-1],[-2,4]], k = 2  
+  Output: [[3,3],[-2,4]]  
+  Explanation: The answer [[-2,4],[3,3]] would also be accepted.  
      
   Constraints:  
-  	1 <= stones.length <= 30  
-  	1 <= stones[i] <= 1000  
+  	1 <= k <= points.length <= 104  
+  	-104 <= xi, yi <= 104  
 
 The following is my solution to test:
 ```
 class Solution:
-    def lastStoneWeight(self, stones: List[int]) -> int:
-        heapq._heapify_max(stones)
-        
-        while len(stones)>1:
-            max_stone = heapq._heappop_max(stones)
-            diff = max_stone - stones[0]
-            if diff:
-                heapq._heapreplace_max(stones,diff)
-            else:
-                heapq._heappop_max(stones)
+    def kClosest(self, points: List[List[int]], k: int) -> List[List[int]]:
+        min_heap = []
+        for (x,y) in points:
+            dist = (x**2) + (y**2)
+            min_heap.append((dist,x,y))
 
-        stones.append(0)
-        return stones[0]
+        heapq.heapify(min_heap)
+        res = []
+
+        for _ in range(k):
+            (distance, x, y) = heapq.heappop(min_heap)
+            res.append((x,y))
+
+        return res
 ```
