@@ -1,28 +1,19 @@
 class Solution:
-    def partition(self, nums: List[int], left: int, right: int) -> int:
-        pivot = nums[right]
-        fill = left
-
-        for i in range(left,right):
-            if nums[i] <= pivot:
-                (nums[fill],nums[i]) = (nums[i], nums[fill] )
-                fill +=1
-        (nums[fill], nums[right]) = (nums[right], nums[fill])
-        return fill
-
     def findKthLargest(self, nums: List[int], k: int) -> int:
         k = len(nums) - k
-        left = 0
-        right = len(nums)-1
 
-        while left < right:
-            pivot = self.partition(nums,left, right)
+        def quickSelect(l,r):
+            (pivot, p) = nums[r],l
+            for i in range(l,r):
+                if nums[i] <= pivot:
+                    nums[p], nums[i] = nums[i], nums[p]
+                    p += 1
+            (nums[p], nums[r]) = (nums[r], nums[p])
 
-            if pivot < k:
-                left = pivot + 1
-            elif pivot > k:
-                right = pivot - 1
-            else:
-                break
-
-        return nums[k]
+            if p>k:
+                return quickSelect(l, p-1)
+            elif p<k:
+                return quickSelect(p+1, r)
+            else: 
+                return nums[p]
+        return quickSelect(0,len(nums)-1)
