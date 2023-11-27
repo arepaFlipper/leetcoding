@@ -1,49 +1,47 @@
 I want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
 
-  215. Kth Largest Element in an Array  
-  Given an integer array nums and an integer k, return the kth largest element in the array.  
-  Note that it is the kth largest element in the sorted order, not the kth distinct element.  
-  Can you solve it without sorting?  
+  621. Task Scheduler  
+  Given a characters array tasks, representing the tasks a CPU needs to do, where each letter represents a different task. Tasks could be done in any order. Each task is done in one unit of time. For each unit of time, the CPU could complete either one task or just be idle.  
+  However, there is a non-negative integer n that represents the cooldown period between two same tasks (the same letter in the array), that is that there must be at least n units of time between any two same tasks.  
+  Return the least number of units of times that the CPU will take to finish all the given tasks.  
      
   Example 1:  
-  Input: nums = [3,2,1,5,6,4], k = 2  
-  Output: 5  
+  Input: tasks = ["A","A","A","B","B","B"], n = 2  
+  Output: 8  
+  Explanation:   
+  A -> B -> idle -> A -> B -> idle -> A -> B  
+  There is at least 2 units of time between any two same tasks.  
   Example 2:  
-  Input: nums = [3,2,3,1,2,4,5,5,6], k = 4  
-  Output: 4  
+  Input: tasks = ["A","A","A","B","B","B"], n = 0  
+  Output: 6  
+  Explanation: On this case any permutation of size 6 would work since n = 0.  
+  ["A","A","A","B","B","B"]  
+  ["A","B","A","B","A","B"]  
+  ["B","B","B","A","A","A"]  
+  ...  
+  And so on.  
+  Example 3:  
+  Input: tasks = ["A","A","A","A","A","A","B","C","D","E","F","G"], n = 2  
+  Output: 16  
+  Explanation:   
+  One possible solution is  
+  A -> B -> C -> A -> D -> E -> A -> F -> G -> A -> idle -> idle -> A -> idle -> idle -> A  
      
   Constraints:  
-  	1 <= k <= nums.length <= 105  
-  	-104 <= nums[i] <= 104  
+  	1 <= task.length <= 104  
+  	tasks[i] is upper-case English letter.  
+  	The integer n is in the range [0, 100].  
 
 The following is my solution to test:
 ```
+from collections import Counter
+
 class Solution:
-    def partition(self, nums: List[int], left: int, right: int) -> int:
-        pivot = nums[right]
-        fill = left
-
-        for i in range(left,right):
-            if nums[i] <= pivot:
-                (nums[fill],nums[i]) = (nums[i], nums[fill] )
-                fill +=1
-        (nums[fill], nums[right]) = (nums[right], nums[fill])
-        return fill
-
-    def findKthLargest(self, nums: List[int], k: int) -> int:
-        k = len(nums) - k
-        left = 0
-        right = len(nums)-1
-
-        while left < right:
-            pivot = self.partition(nums,left, right)
-
-            if pivot < k:
-                left = pivot + 1
-            elif pivot > k:
-                right = pivot - 1
-            else:
-                break
-
-        return nums[k]
+    def leastInterval(self, tasks: List[str], n: int) -> int:
+        counter = Counter(tasks)
+        max_count = max(counter.values())
+        nutshell = sum(map(lambda count: count == max_count, counter.values()))
+        min_time = (max_count - 1 ) * (n +1) + nutshell
+        
+        return max(min_time, len(tasks))
 ```
