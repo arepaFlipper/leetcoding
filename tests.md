@@ -1,47 +1,72 @@
 I want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
 
-  621. Task Scheduler  
-  Given a characters array tasks, representing the tasks a CPU needs to do, where each letter represents a different task. Tasks could be done in any order. Each task is done in one unit of time. For each unit of time, the CPU could complete either one task or just be idle.  
-  However, there is a non-negative integer n that represents the cooldown period between two same tasks (the same letter in the array), that is that there must be at least n units of time between any two same tasks.  
-  Return the least number of units of times that the CPU will take to finish all the given tasks.  
+  355. Design Twitter  
+  Design a simplified version of Twitter where users can post tweets, follow/unfollow another user, and is able to see the 10 most recent tweets in the user's news feed.  
+  Implement the Twitter class:  
+  	Twitter() Initializes your twitter object.  
+  	void postTweet(int userId, int tweetId) Composes a new tweet with ID tweetId by the user userId. Each call to this function will be made with a unique tweetId.  
+  	List<Integer> getNewsFeed(int userId) Retrieves the 10 most recent tweet IDs in the user's news feed. Each item in the news feed must be posted by users who the user followed or by the user themself. Tweets must be ordered from most recent to least recent.  
+  	void follow(int followerId, int followeeId) The user with ID followerId started following the user with ID followeeId.  
+  	void unfollow(int followerId, int followeeId) The user with ID followerId started unfollowing the user with ID followeeId.  
      
   Example 1:  
-  Input: tasks = ["A","A","A","B","B","B"], n = 2  
-  Output: 8  
-  Explanation:   
-  A -> B -> idle -> A -> B -> idle -> A -> B  
-  There is at least 2 units of time between any two same tasks.  
-  Example 2:  
-  Input: tasks = ["A","A","A","B","B","B"], n = 0  
-  Output: 6  
-  Explanation: On this case any permutation of size 6 would work since n = 0.  
-  ["A","A","A","B","B","B"]  
-  ["A","B","A","B","A","B"]  
-  ["B","B","B","A","A","A"]  
-  ...  
-  And so on.  
-  Example 3:  
-  Input: tasks = ["A","A","A","A","A","A","B","C","D","E","F","G"], n = 2  
-  Output: 16  
-  Explanation:   
-  One possible solution is  
-  A -> B -> C -> A -> D -> E -> A -> F -> G -> A -> idle -> idle -> A -> idle -> idle -> A  
+  Input  
+  ["Twitter", "postTweet", "getNewsFeed", "follow", "postTweet", "getNewsFeed", "unfollow", "getNewsFeed"]  
+  [[], [1, 5], [1], [1, 2], [2, 6], [1], [1, 2], [1]]  
+  Output  
+  [null, null, [5], null, null, [6, 5], null, [5]]  
+  Explanation  
+  Twitter twitter = new Twitter();  
+  twitter.postTweet(1, 5); // User 1 posts a new tweet (id = 5).  
+  twitter.getNewsFeed(1);  // User 1's news feed should return a list with 1 tweet id -> [5]. return [5]  
+  twitter.follow(1, 2);    // User 1 follows user 2.  
+  twitter.postTweet(2, 6); // User 2 posts a new tweet (id = 6).  
+  twitter.getNewsFeed(1);  // User 1's news feed should return a list with 2 tweet ids -> [6, 5]. Tweet id 6 should precede tweet id 5 because it is posted after tweet id 5.  
+  twitter.unfollow(1, 2);  // User 1 unfollows user 2.  
+  twitter.getNewsFeed(1);  // User 1's news feed should return a list with 1 tweet id -> [5], since user 1 is no longer following user 2.  
      
   Constraints:  
-  	1 <= task.length <= 104  
-  	tasks[i] is upper-case English letter.  
-  	The integer n is in the range [0, 100].  
+  	1 <= userId, followerId, followeeId <= 500  
+  	0 <= tweetId <= 104  
+  	All the tweets have unique IDs.  
+  	At most 3 * 104 calls will be made to postTweet, getNewsFeed, follow, and unfollow.  
 
 The following is my solution to test:
 ```
-from collections import Counter
-
-class Solution:
-    def leastInterval(self, tasks: List[str], n: int) -> int:
-        counter = Counter(tasks)
-        max_count = max(counter.values())
-        nutshell = sum(map(lambda count: count == max_count, counter.values()))
-        min_time = (max_count - 1 ) * (n +1) + nutshell
+class Twitter:
+    def __init__(self):
+        self.count = 0
+        self.tweet_map = defaultdict(list)
+        self.follow_map = defaultdict(set)
         
-        return max(min_time, len(tasks))
+    def postTweet(self, userId: int, tweetId: int) -> None:
+        self.tweet_map[userId].append([self.count, tweetId])
+        self.count -= 1
+
+        
+    def getNewsFeed(self, userId: int) -> List[int]:
+        res = []
+        min_heap = []
+
+        self.follow_map[userId].add(userId)
+        for followeeId in self.follow_map[userId]:
+            if followeeId in self.tweet_map:
+                index = len(self.tweet_map[followeeId]) - 1
+                (count, tweetId) = self.tweet_map[followeeId][index]
+                heapq.heappush(min_heap, [count, tweetId, followeeId, index - 1])
+
+        while min_heap and len(res) < 10:
+            (count, tweetId, followeeId, index) = heapq.heappop(min_heap)
+            res.append(tweetId)
+            if index >= 0:
+                (count, tweetId) = self.tweet_map[followeeId][index]
+                heapq.heappush(min_heap, [count, tweetId, followeeId, index -1])
+        return res
+        
+    def follow(self, followerId: int, followeeId: int) -> None:
+        self.follow_map[followerId].add(followeeId)
+        
+    def unfollow(self, followerId: int, followeeId: int) -> None:
+        if followeeId in self.follow_map[followerId]:
+            self.follow_map[followerId].remove(followeeId)
 ```
