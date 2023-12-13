@@ -17,7 +17,7 @@ class Twitter:
         res = []
         min_heap = []
 
-        self.follow_map[userId].add(userId)
+        self.follow_map[userId].add(userId) # user follows himself
         for followeeId in self.follow_map[userId]:
             if followeeId in self.tweet_map:
                 index = len(self.tweet_map[followeeId]) - 1
