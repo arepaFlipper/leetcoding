@@ -1,47 +1,49 @@
 I want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
 
-          https://leetcode.com/problems/combination-sum-ii/
-                                  
-                       40. Combination Sum II
-                Medium | 9921  262  | 54.0% of 1.6M
+   https://leetcode.com/problems/word-search/
+                        
+                 79. Word Search
+     Medium | 14751  607  | 41.1% of 3.5M
 
 
 
-Given a collection of candidate numbers (candidates) and a target number (target), find all unique combinations in candidates where the candidate numbers sum to target.
+Given an m x n grid of characters board and a string word, return true if word exists in the grid.
 
-Each number in candidates may only be used once in the combination.
-
-Note: The solution set must not contain duplicate combinations.
+The word can be constructed from letters of sequentially adjacent cells, where adjacent cells are horizontally or vertically neighboring. The same letter cell may not be used more than once.
 
 
 
 󰛨 Example 1:
 
-	▎	Input: candidates = [10,1,2,7,6,1,5], target = 8
-	▎	Output: 
-	▎	[
-	▎	[1,1,6],
-	▎	[1,2,5],
-	▎	[1,7],
-	▎	[2,6]
-	▎	]
+img->(https://assets.leetcode.com/uploads/2020/11/04/word2.jpg)
+	▎	Input: board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "ABCCED"
+	▎	Output: true
 
 󰛨 Example 2:
 
-	▎	Input: candidates = [2,5,2,1,2], target = 5
-	▎	Output: 
-	▎	[
-	▎	[1,2,2],
-	▎	[5]
-	▎	]
+img->(https://assets.leetcode.com/uploads/2020/11/04/word-1.jpg)
+	▎	Input: board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "SEE"
+	▎	Output: true
+
+󰛨 Example 3:
+
+img->(https://assets.leetcode.com/uploads/2020/10/15/word3.jpg)
+	▎	Input: board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "ABCB"
+	▎	Output: false
 
 
 
  Constraints:
 
-	* 1 <= candidates.length <= 100
-	* 1 <= candidates[i] <= 50
-	* 1 <= target <= 30
+	* m == board.length
+	* n = board[i].length
+	* 1 <= m, n <= 6
+	* 1 <= word.length <= 15
+	* board and word consists of only lowercase and uppercase English letters.
+
+
+
+Follow up: Could you use search pruning to make your solution faster with a larger board?
 
 
 
@@ -51,33 +53,33 @@ Note: The solution set must not contain duplicate combinations.
 
 The following is my solution to test:
 ```
-# @leet start
-from typing import List
+from collections import Counter
 
 class Solution:
-    def combinationSum2(self, candidates: List[int], target: int) -> List[List[int]]:
-        candidates.sort()
+    def exist(self, board: List[List[str]], word: str) -> bool:
+        ROWS, COLS = len(board), len(board[0])
+        path = set()
 
-        res = []
+        def dfs(r,c,i):
+            if i == len(word):
+                return True
 
-        def backtrack(cur, pos, target):
-            if target == 0:
-                res.append(cur.copy())
-                return
+            if(min(r,c) < 0 or r>= ROWS or c >= COLS or word[i] != board[r][c] or (r,c) in path):
+                return False
             
-            if target <= 0:
-                return
+            path.add((r,c))
+            res = ( dfs(r+1,c,i+1) or dfs(r-1,c,i+1) or dfs(r,c+1, i+1) or dfs(r,c-1, i+1))
+            path.remove((r,c))
+            return res
 
-            prev = -1
-            for i in range(pos, len(candidates)):
-                if candidates[i] == prev:
-                    continue
-                cur.append(candidates[i])
-                backtrack(cur, i+1, target - candidates[i])
-                cur.pop()
-                prev = candidates[i]
+        count = defaultdict(int,sum(map(Counter, board), Counter()))
+        if count[word[0]] > count[word[-1]]:
+            word = word[::-1]
 
-        backtrack([], 0, target)
-        return res
-# @leet end
+        for r in range(ROWS):
+            for c in range(COLS):
+                if dfs(r,c,0):
+                    return True
+        return False
+        
 ```
