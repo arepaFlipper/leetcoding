@@ -1,40 +1,38 @@
 I want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
 
-https://leetcode.com/problems/letter-combinations-of-a-phone-number/
+     https://leetcode.com/problems/n-queens/
                         
-    17. Letter Combinations of a Phone Number
-     Medium | 17676  926  | 59.3% of 3.1M
+                  51. N-Queens
+     Hard | 11727  256  | 67.0% of 965.3K
 
 
 
-Given a string containing digits from 2-9 inclusive, return all possible letter combinations that the number could represent. Return the answer in any order.
+The n-queens puzzle is the problem of placing n queens on an n x n chessboard such that no two queens attack each other.
 
-A mapping of digits to letters (just like on the telephone buttons) is given below. Note that 1 does not map to any letters.
-img->(https://assets.leetcode.com/uploads/2022/03/15/1200px-telephone-keypad2svg.png)
+Given an integer n, return all distinct solutions to the n-queens puzzle. You may return the answer in any order.
+
+Each solution contains a distinct board configuration of the n-queens' placement, where 'Q' and '.' both indicate a queen and an empty space, respectively.
 
 
 
 󰛨 Example 1:
 
-	▎	Input: digits = "23"
-	▎	Output: ["ad","ae","af","bd","be","bf","cd","ce","cf"]
+img->(https://assets.leetcode.com/uploads/2020/11/13/queens.jpg)
+	▎	Input: n = 4
+	▎	Output: [[".Q..","...Q","Q...","..Q."],["..Q.","Q...","...Q",".Q.."]]
+	▎	Explanation: There exist two distinct solutions to the 4-queens puzzle as shown above
 
 󰛨 Example 2:
 
-	▎	Input: digits = ""
-	▎	Output: []
-
-󰛨 Example 3:
-
-	▎	Input: digits = "2"
-	▎	Output: ["a","b","c"]
+	▎	Input: n = 1
+	▎	Output: [["Q"]]
 
 
 
  Constraints:
 
-	* 0 <= digits.length <= 4
-	* digits[i] is a digit in the range ['2', '9'].
+	* 1 <= n <= 9
+
 
 
 
@@ -44,30 +42,38 @@ img->(https://assets.leetcode.com/uploads/2022/03/15/1200px-telephone-keypad2svg
 
 The following is my solution to test:
 ```
+# @leet start
 class Solution:
-    def letterCombinations(self, digits: str) -> List[str]:
+    def solveNQueens(self, n: int) -> List[List[str]]:
+        column = set()
+        positive_diagonal = set()
+        negative_diagonal = set()
+        
         res = []
-        digit_to_char = {
-            "2": "abc",
-            "3": "def",
-            "4": "ghi",
-            "5": "jkl",
-            "6": "mno",
-            "7": "pqrs",
-            "8": "tuv",
-            "9": "wxyz",
-        }
+        board = [["."] * n for i in range(n)]
 
-        def backtrack(idx, current_string):
-            if len(current_string) == len(digits):
-                res.append(current_string)
+        def backtrack(row):
+            if row == n:
+                copy = ["".join(row) for row in board]
+                res.append(copy)
                 return
-            for char in digit_to_char[digits[idx]]:
-                backtrack(idx + 1 , current_string + char)
+            for char in range(n):
+                if char in column or (row + char) in positive_diagonal or (row - char) in negative_diagonal:
+                    continue
 
-        if digits:
-            backtrack(0, "")
+                column.add(char)
+                positive_diagonal.add(row + char)
+                negative_diagonal.add(row - char)
+                board[row][char] = "Q"
 
+                backtrack(row+1)
+
+                column.remove(char)
+                positive_diagonal.remove(row + char)
+                negative_diagonal.remove(row - char)
+                board[row][char] = "."
+        backtrack(0)
         return res
+# @leet end
         
 ```
