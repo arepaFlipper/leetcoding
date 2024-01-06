@@ -1,45 +1,39 @@
 I want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
 
-   https://leetcode.com/problems/coin-change/
+https://leetcode.com/problems/maximum-product-subarray/
                         
-                322. Coin Change
-     Medium | 18210  426  | 43.3% of 3.8M
+          152. Maximum Product Subarray
+     Medium | 17848  568  | 34.9% of 3.3M
 
 
 
-You are given an integer array coins representing coins of different denominations and an integer amount representing a total amount of money.
+Given an integer array nums, find a subarray that has the largest product, and return the product.
 
-Return the fewest number of coins that you need to make up that amount. If that amount of money cannot be made up by any combination of the coins, return -1.
-
-You may assume that you have an infinite number of each kind of coin.
+The test cases are generated so that the answer will fit in a 32-bit integer.
 
 
 
 󰛨 Example 1:
 
-	▎	Input: coins = [1,2,5], amount = 11
-	▎	Output: 3
-	▎	Explanation: 11 = 5 + 5 + 1
+	▎	Input: nums = [2,3,-2,4]
+	▎	Output: 6
+	▎	Explanation: [2,3] has the largest product 6.
 
 󰛨 Example 2:
 
-	▎	Input: coins = [2], amount = 3
-	▎	Output: -1
-
-󰛨 Example 3:
-
-	▎	Input: coins = [1], amount = 0
+	▎	Input: nums = [-2,0,-1]
 	▎	Output: 0
+	▎	Explanation: The result cannot be 2, because [-2,-1] is not a subarray.
 
 
 
  Constraints:
 
-	* 1 <= coins.length <= 12
+	* 1 <= nums.length <= 2 * 10^4
 	
-	* 1 <= coins[i] <= 2^31 - 1
+	* -10 <= nums[i] <= 10
 	
-	* 0 <= amount <= 10^4
+	* The product of any prefix or suffix of nums is guaranteed to fit in a 32-bit integer.
 
 
 
@@ -53,20 +47,18 @@ The following is my solution to test:
 ```
 
 # @leet start
+
 class Solution:
-    def coinChange(self, coins: List[int], amount: int) -> int:
-        dp = [amount + 1] * (amount +1)
-        dp[0] = 0
+    def maxProduct(self, nums: List[int]) -> int:
+        res: int = nums[0]
+        (current_min,current_max) = (1,1)
 
-        for target in range(1, amount +1):
-            for coin in coins:
-                if target - coin >= 0:
-                    dp[target] = min(dp[target], 1 + dp[target - coin])
-
-        if dp[amount] != amount + 1:
-            return dp[amount]
-        else:
-            return -1
+        for number in nums:
+            temp = current_max * number
+            current_max=max(number,temp,current_min*number)
+            current_min = min(temp,current_min*number, number)
+            res = max(res,current_max)
+        return res
 # @leet end
         
 ```
