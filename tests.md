@@ -1,39 +1,53 @@
 I want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
 
-https://leetcode.com/problems/maximum-product-subarray/
+https://leetcode.com/problems/kth-largest-element-in-a-stream/
                         
-          152. Maximum Product Subarray
-     Medium | 17848  568  | 34.9% of 3.3M
+      703. Kth Largest Element in a Stream
+    Easy  | 5233  3297  | 56.6% of 866.7K
 
 
 
-Given an integer array nums, find a subarray that has the largest product, and return the product.
+Design a class to find the k^th largest element in a stream. Note that it is the k^th largest element in the sorted order, not the k^th distinct element.
 
-The test cases are generated so that the answer will fit in a 32-bit integer.
+Implement KthLargest class:
+
+	* KthLargest(int k, int[] nums) Initializes the object with the integer k and the stream of integers nums.
+	
+	* int add(int val) Appends the integer val to the stream and returns the element representing the k^th largest element in the stream.
 
 
 
 󰛨 Example 1:
 
-	▎	Input: nums = [2,3,-2,4]
-	▎	Output: 6
-	▎	Explanation: [2,3] has the largest product 6.
-
-󰛨 Example 2:
-
-	▎	Input: nums = [-2,0,-1]
-	▎	Output: 0
-	▎	Explanation: The result cannot be 2, because [-2,-1] is not a subarray.
+	▎	Input
+	▎	["KthLargest", "add", "add", "add", "add", "add"]
+	▎	[[3, [4, 5, 8, 2]], [3], [5], [10], [9], [4]]
+	▎	Output
+	▎	[null, 4, 5, 5, 8, 8]
+	▎	
+	▎	Explanation
+	▎	KthLargest kthLargest = new KthLargest(3, [4, 5, 8, 2]);
+	▎	kthLargest.add(3);   // return 4
+	▎	kthLargest.add(5);   // return 5
+	▎	kthLargest.add(10);  // return 5
+	▎	kthLargest.add(9);   // return 8
+	▎	kthLargest.add(4);   // return 8
 
 
 
  Constraints:
 
-	* 1 <= nums.length <= 2 * 10^4
+	* 1 <= k <= 10^4
 	
-	* -10 <= nums[i] <= 10
+	* 0 <= nums.length <= 10^4
 	
-	* The product of any prefix or suffix of nums is guaranteed to fit in a 32-bit integer.
+	* -10^4 <= nums[i] <= 10^4
+	
+	* -10^4 <= val <= 10^4
+	
+	* At most 10^4 calls will be made to add.
+	
+	* It is guaranteed that there will be at least k elements in the array when you search for the k^th element.
 
 
 
@@ -48,17 +62,20 @@ The following is my solution to test:
 
 # @leet start
 
-class Solution:
-    def maxProduct(self, nums: List[int]) -> int:
-        res: int = nums[0]
-        (current_min,current_max) = (1,1)
+from typing import List
 
-        for number in nums:
-            temp = current_max * number
-            current_max=max(number,temp,current_min*number)
-            current_min = min(temp,current_min*number, number)
-            res = max(res,current_max)
-        return res
+class KthLargest:
+    def __init__(self, k: int, nums: List[int]):
+        (self.min_heap, self.k) = (nums, k)
+        heapq.heapify(self.min_heap)
+        while (len(self.min_heap)> k):
+            heapq.heappop(self.min_heap)
+        
+    def add(self, val: int) -> int:
+        heapq.heappush(self.min_heap, val)
+        if (len(self.min_heap)> self.k):
+            heapq.heappop(self.min_heap)
+        return self.min_heap[0]
 # @leet end
         
 ```
