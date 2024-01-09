@@ -1,49 +1,43 @@
 I want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
 
-    https://leetcode.com/problems/word-break/
+https://leetcode.com/problems/longest-increasing-subsequence/
                         
-                 139. Word Break
-     Medium | 16637  731  | 46.5% of 3.4M
+       300. Longest Increasing Subsequence
+     Medium | 20216  408  | 54.7% of 2.8M
 
 
 
-Given a string s and a dictionary of strings wordDict, return true if s can be segmented into a space-separated sequence of one or more dictionary words.
-
-Note that the same word in the dictionary may be reused multiple times in the segmentation.
+Given an integer array nums, return the length of the longest strictly increasing subsequence.
 
 
 
 󰛨 Example 1:
 
-	▎	Input: s = "leetcode", wordDict = ["leet","code"]
-	▎	Output: true
-	▎	Explanation: Return true because "leetcode" can be segmented as "leet code".
+	▎	Input: nums = [10,9,2,5,3,7,101,18]
+	▎	Output: 4
+	▎	Explanation: The longest increasing subsequence is [2,3,7,101], therefore the length is 4.
 
 󰛨 Example 2:
 
-	▎	Input: s = "applepenapple", wordDict = ["apple","pen"]
-	▎	Output: true
-	▎	Explanation: Return true because "applepenapple" can be segmented as "apple pen apple".
-	▎	Note that you are allowed to reuse a dictionary word.
+	▎	Input: nums = [0,1,0,3,2,3]
+	▎	Output: 4
 
 󰛨 Example 3:
 
-	▎	Input: s = "catsandog", wordDict = ["cats","dog","sand","and","cat"]
-	▎	Output: false
+	▎	Input: nums = [7,7,7,7,7,7,7]
+	▎	Output: 1
 
 
 
  Constraints:
 
-	* 1 <= s.length <= 300
+	* 1 <= nums.length <= 2500
 	
-	* 1 <= wordDict.length <= 1000
-	
-	* 1 <= wordDict[i].length <= 20
-	
-	* s and wordDict[i] consist of only lowercase English letters.
-	
-	* All the strings of wordDict are unique.
+	* -10^4 <= nums[i] <= 10^4
+
+
+
+Follow up: Can you come up with an algorithm that runs in O(n log(n)) time complexity?
 
 
 
@@ -56,20 +50,16 @@ Note that the same word in the dictionary may be reused multiple times in the se
 
 The following is my solution to test:
 ```
-
 # @leet start
 class Solution:
-    def wordBreak(self, s: str, wordDict: List[str]) -> bool:
-        dp = [False] * (len(s)+1)
-        dp[len(s)] = True
+    def lengthOfLIS(self, nums: List[int]) -> int:
+        LIS = [1] * len(nums)
 
-        for idx in range(len(s)-1, -1,-1):
-            for w in wordDict:
-                if ((idx + len(w)) <= len(s)) and (s[idx:idx+len(w)] == w):
-                    dp[idx] = dp[idx+len(w)]
-                if dp[idx]:
-                    break
-        return dp[0]
-# @leet end-
+        for idx in range(len(nums) -1, -1, -1):
+            for jdx in range(idx+1, len(nums)):
+                if nums[idx] < nums[jdx]:
+                    LIS[idx] = max(LIS[idx], 1 + LIS[jdx])
+        return max(LIS)
         
+# @leet end
 ```
