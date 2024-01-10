@@ -1,45 +1,35 @@
 I want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
 
-https://leetcode.com/problems/longest-increasing-subsequence/
+https://leetcode.com/problems/partition-equal-subset-sum/
                         
-       300. Longest Increasing Subsequence
-     Medium | 20216  408  | 54.7% of 2.8M
+         416. Partition Equal Subset Sum
+     Medium | 11836  222  | 46.2% of 1.6M
 
 
 
-Given an integer array nums, return the length of the longest strictly increasing subsequence.
+Given an integer array nums, return true if you can partition the array into two subsets such that the sum of the elements in both subsets is equal or false otherwise.
 
 
 
 󰛨 Example 1:
 
-	▎	Input: nums = [10,9,2,5,3,7,101,18]
-	▎	Output: 4
-	▎	Explanation: The longest increasing subsequence is [2,3,7,101], therefore the length is 4.
+	▎	Input: nums = [1,5,11,5]
+	▎	Output: true
+	▎	Explanation: The array can be partitioned as [1, 5, 5] and [11].
 
 󰛨 Example 2:
 
-	▎	Input: nums = [0,1,0,3,2,3]
-	▎	Output: 4
-
-󰛨 Example 3:
-
-	▎	Input: nums = [7,7,7,7,7,7,7]
-	▎	Output: 1
+	▎	Input: nums = [1,2,3,5]
+	▎	Output: false
+	▎	Explanation: The array cannot be partitioned into equal sum subsets.
 
 
 
  Constraints:
 
-	* 1 <= nums.length <= 2500
+	* 1 <= nums.length <= 200
 	
-	* -10^4 <= nums[i] <= 10^4
-
-
-
-Follow up: Can you come up with an algorithm that runs in O(n log(n)) time complexity?
-
-
+	* 1 <= nums[i] <= 100
 
 
 
@@ -52,14 +42,21 @@ The following is my solution to test:
 ```
 # @leet start
 class Solution:
-    def lengthOfLIS(self, nums: List[int]) -> int:
-        LIS = [1] * len(nums)
+    def canPartition(self, nums: List[int]) -> bool:
+        if sum(nums) % 2:
+            return False
+        dp = set()
+        dp.add(0)
+        target = sum(nums) // 2
 
         for idx in range(len(nums) -1, -1, -1):
-            for jdx in range(idx+1, len(nums)):
-                if nums[idx] < nums[jdx]:
-                    LIS[idx] = max(LIS[idx], 1 + LIS[jdx])
-        return max(LIS)
-        
+            next_dp = set()
+            for t in dp:
+                if (t + nums[idx]) == target:
+                    return True
+                next_dp.add(t + nums[idx])
+                next_dp.add(t)
+            dp = next_dp
+        return False
 # @leet end
 ```
