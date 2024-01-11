@@ -1,35 +1,41 @@
 I want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
 
-https://leetcode.com/problems/partition-equal-subset-sum/
-                        
-         416. Partition Equal Subset Sum
-     Medium | 11836  222  | 46.2% of 1.6M
+     https://leetcode.com/problems/unique-paths/
+                          
+                  62. Unique Paths
+       Medium | 16080  421  | 63.9% of 2.6M
 
 
 
-Given an integer array nums, return true if you can partition the array into two subsets such that the sum of the elements in both subsets is equal or false otherwise.
+There is a robot on an m x n grid. The robot is initially located at the top-left corner (i.e., grid[0][0]). The robot tries to move to the bottom-right corner (i.e., grid[m - 1][n - 1]). The robot can only move either down or right at any point in time.
+
+Given the two integers m and n, return the number of possible unique paths that the robot can take to reach the bottom-right corner.
+
+The test cases are generated so that the answer will be less than or equal to 2 * 10^9.
 
 
 
 󰛨 Example 1:
 
-	▎	Input: nums = [1,5,11,5]
-	▎	Output: true
-	▎	Explanation: The array can be partitioned as [1, 5, 5] and [11].
+[img](https://assets.leetcode.com/uploads/2018/10/22/robot_maze.png)
+
+	▎	Input: m = 3, n = 7
+	▎	Output: 28
 
 󰛨 Example 2:
 
-	▎	Input: nums = [1,2,3,5]
-	▎	Output: false
-	▎	Explanation: The array cannot be partitioned into equal sum subsets.
+	▎	Input: m = 3, n = 2
+	▎	Output: 3
+	▎	Explanation: From the top-left corner, there are a total of 3 ways to reach the bottom-right corner:
+	▎	1. Right -> Down -> Down
+	▎	2. Down -> Down -> Right
+	▎	3. Down -> Right -> Down
 
 
 
  Constraints:
 
-	* 1 <= nums.length <= 200
-	
-	* 1 <= nums[i] <= 100
+	* 1 <= m, n <= 100
 
 
 
@@ -42,21 +48,14 @@ The following is my solution to test:
 ```
 # @leet start
 class Solution:
-    def canPartition(self, nums: List[int]) -> bool:
-        if sum(nums) % 2:
-            return False
-        dp = set()
-        dp.add(0)
-        target = sum(nums) // 2
+    def uniquePaths(self, m: int, n: int) -> int:
+        row = [1] * n
 
-        for idx in range(len(nums) -1, -1, -1):
-            next_dp = set()
-            for t in dp:
-                if (t + nums[idx]) == target:
-                    return True
-                next_dp.add(t + nums[idx])
-                next_dp.add(t)
-            dp = next_dp
-        return False
+        for idx in range(m-1):
+            new_row = [1]*n
+            for jdx in range(n-2, -1,-1):
+                new_row[jdx] = new_row[jdx+1] + row[jdx]
+            row = new_row
+        return row[0]
 # @leet end
 ```
