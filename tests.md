@@ -1,45 +1,39 @@
-https://leetcode.com/problems/longest-common-subsequence/
-                        
-        1143. Longest Common Subsequence
-Medium | 12643  165  | 57.5% of 1.5M | 󰛨 Hints
+             https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/
+                                                   
+                          309. Best Time to Buy and Sell Stock with Cooldown
+                                Medium | 9136  305  | 57.7% of 820.5K
 
 
 
-Given two strings text1 and text2, return the length of their longest common subsequence. If there is no common subsequence, return 0.
+You are given an array prices where prices[i] is the price of a given stock on the i^th day.
 
-A subsequence of a string is a new string generated from the original string with some characters (can be none) deleted without changing the relative order of the remaining characters.
+Find the maximum profit you can achieve. You may complete as many transactions as you like (i.e., buy one and sell one share of the stock multiple times) with the following restrictions:
 
-	* For example, "ace" is a subsequence of "abcde".
+	* After you sell your stock, you cannot buy stock on the next day (i.e., cooldown one day).
 
-A common subsequence of two strings is a subsequence that is common to both strings.
+Note: You may not engage in multiple transactions simultaneously (i.e., you must sell the stock before you buy again).
 
 
 
 󰛨 Example 1:
 
-	▎	Input: text1 = "abcde", text2 = "ace" 
-	▎	Output: 3  
-	▎	Explanation: The longest common subsequence is "ace" and its length is 3.
+	▎	Input: prices = [1,2,3,0,2]
+	▎	Output: 3
+	▎	Explanation: transactions = [buy, sell, cooldown, buy, sell]
 
 󰛨 Example 2:
 
-	▎	Input: text1 = "abc", text2 = "abc"
-	▎	Output: 3
-	▎	Explanation: The longest common subsequence is "abc" and its length is 3.
-
-󰛨 Example 3:
-
-	▎	Input: text1 = "abc", text2 = "def"
+	▎	Input: prices = [1]
 	▎	Output: 0
-	▎	Explanation: There is no such common subsequence, so the result is 0.
 
 
 
  Constraints:
 
-	* 1 <= text1.length, text2.length <= 1000
+	* 1 <= prices.length <= 5000
 	
-	* text1 and text2 consist of only lowercase English characters.
+	* 0 <= prices[i] <= 1000
+
 
 
 
@@ -50,16 +44,24 @@ The following is my solution to test:
 ```
 # @leet start
 class Solution:
-    def longestCommonSubsequence(self, text1: str, text2: str) -> int:
-        matrix = [[0 for jdx in range(len(text2)+1)] for idx in range(len(text1)+1)]
-        
-        for idx in range(len(text1) -1, -1,-1):
-            for jdx in range(len(text2)-1,-1,-1):
-                if text1[idx] == text2[jdx]:
-                    matrix[idx][jdx] = 1 + matrix[idx +1][jdx +1]
-                else:
-                    matrix[idx][jdx] = max(matrix[idx][jdx + 1], matrix[idx +1][jdx])
+    def maxProfit(self, prices: List[int]) -> int:        
+        dp = {}
 
-        return matrix[0][0]
+        def depth_first_search(idx: int,buying: bool):
+            if (idx >= len(prices)):
+                return 0
+            if (idx,buying) in dp:
+                return dp[(idx, buying)]
+            
+            cooldown = depth_first_search(idx + 1, buying)
+
+            if buying:
+                buy = depth_first_search(idx + 1, not buying) - prices[idx]
+                dp[(idx, buying)] = max(buy, cooldown)
+            else:
+                sell = depth_first_search(idx +2, not buying) + prices[idx]
+                dp[(idx, buying)] = max(sell, cooldown)
+            return dp[(idx, buying)]
+        return depth_first_search(0, True)
 # @leet end
 ```
