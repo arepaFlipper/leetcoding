@@ -3,25 +3,14 @@ from typing import List
 # @leet start
 class Solution:
     def change(self, amount: int, coins: List[int]) -> int:
-        cache: Dict = {}
-
-        def depth_first_search(idx, target):
-            if target == amount:
-                return 1
-            
-            if target > amount:
-                return 0
-        
-            if idx == len(coins):
-                return 0
-
-            if (idx, target) in cache:
-                return cache[(idx, target)]
-    
-            cache[(idx, target)] = depth_first_search(idx, target + coins[idx]) + depth_first_search(idx + 1, target)
-            return cache[(idx, target)]
-
-        return depth_first_search(0, 0)
+        dp = [[0] * (len(coins) + 1) for i in range(amount + 1)]
+        dp[0] = [1] * (len(coins) + 1)
+        for target in range(1, amount +1 ):
+            for idx in range(len(coins) -1, -1, -1):
+                dp[target][idx] = dp[target][idx +1]
+                if target - coins[idx] >= 0:
+                    dp[target][idx] += dp[target - coins[idx]][idx]
+        return dp[amount][0]
 
 # @leet end
 
