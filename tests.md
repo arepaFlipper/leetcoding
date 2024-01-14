@@ -1,38 +1,56 @@
-             https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/
-                                                   
-                          309. Best Time to Buy and Sell Stock with Cooldown
-                                Medium | 9136  305  | 57.7% of 820.5K
+I want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
+
+  https://leetcode.com/problems/coin-change-ii/
+                        
+               518. Coin Change II
+     Medium | 9037  159  | 63.5% of 896.5K
 
 
 
-You are given an array prices where prices[i] is the price of a given stock on the i^th day.
+You are given an integer array coins representing coins of different denominations and an integer amount representing a total amount of money.
 
-Find the maximum profit you can achieve. You may complete as many transactions as you like (i.e., buy one and sell one share of the stock multiple times) with the following restrictions:
+Return the number of combinations that make up that amount. If that amount of money cannot be made up by any combination of the coins, return 0.
 
-	* After you sell your stock, you cannot buy stock on the next day (i.e., cooldown one day).
+You may assume that you have an infinite number of each kind of coin.
 
-Note: You may not engage in multiple transactions simultaneously (i.e., you must sell the stock before you buy again).
+The answer is guaranteed to fit into a signed 32-bit integer.
 
 
 
 󰛨 Example 1:
 
-	▎	Input: prices = [1,2,3,0,2]
-	▎	Output: 3
-	▎	Explanation: transactions = [buy, sell, cooldown, buy, sell]
+	▎	Input: amount = 5, coins = [1,2,5]
+	▎	Output: 4
+	▎	Explanation: there are four ways to make up the amount:
+	▎	5=5
+	▎	5=2+2+1
+	▎	5=2+1+1+1
+	▎	5=1+1+1+1+1
 
 󰛨 Example 2:
 
-	▎	Input: prices = [1]
+	▎	Input: amount = 3, coins = [2]
 	▎	Output: 0
+	▎	Explanation: the amount of 3 cannot be made up just with coins of 2.
+
+󰛨 Example 3:
+
+	▎	Input: amount = 10, coins = [10]
+	▎	Output: 1
 
 
 
  Constraints:
 
-	* 1 <= prices.length <= 5000
+	* 1 <= coins.length <= 300
 	
-	* 0 <= prices[i] <= 1000
+	* 1 <= coins[i] <= 5000
+	
+	* All the values of coins are unique.
+	
+	* 0 <= amount <= 5000
+
+
 
 
 
@@ -44,24 +62,25 @@ The following is my solution to test:
 ```
 # @leet start
 class Solution:
-    def maxProfit(self, prices: List[int]) -> int:        
-        dp = {}
+    def change(self, amount: int, coins: List[int]) -> int:
+        cache: Dict = {}
 
-        def depth_first_search(idx: int,buying: bool):
-            if (idx >= len(prices)):
-                return 0
-            if (idx,buying) in dp:
-                return dp[(idx, buying)]
+        def depth_first_search(idx, target):
+            if target == amount:
+                return 1
             
-            cooldown = depth_first_search(idx + 1, buying)
+            if target > amount:
+                return 0
+        
+            if idx == len(coins):
+                return 0
 
-            if buying:
-                buy = depth_first_search(idx + 1, not buying) - prices[idx]
-                dp[(idx, buying)] = max(buy, cooldown)
-            else:
-                sell = depth_first_search(idx +2, not buying) + prices[idx]
-                dp[(idx, buying)] = max(sell, cooldown)
-            return dp[(idx, buying)]
-        return depth_first_search(0, True)
+            if (idx, target) in cache:
+                return cache[(idx,target)]
+    
+            cache[(idx, target)] = depth_first_search(idx, target + coins[idx]) + depth_first_search(idx + 1, target)
+            return cache[(idx, target)]
+        return depth_first_search(0,0)
+        
 # @leet end
 ```
