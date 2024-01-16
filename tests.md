@@ -1,49 +1,64 @@
 I want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
 
-    https://leetcode.com/problems/target-sum/
-                        
-                 494. Target Sum
-     Medium | 10508  347  | 46.4% of 1.2M
+         https://leetcode.com/problems/interleaving-string/
+                                  
+                       97. Interleaving String
+                Medium | 7968  461  | 39.6% of 1.2M
 
 
 
-You are given an integer array nums and an integer target.
+Given strings s1, s2, and s3, find whether s3 is formed by an interleaving of s1 and s2.
 
-You want to build an expression out of nums by adding one of the symbols '+' and '-' before each integer in nums and then concatenate all the integers.
+An interleaving of two strings s and t is a configuration where s and t are divided into n and m substrings respectively, such that:
 
-	* For example, if nums = [2, 1], you can add a '+' before 2 and a '-' before 1 and concatenate them to build the expression "+2-1".
+	* s = s_1 + s_2 + ... + s_n
+	
+	* t = t_1 + t_2 + ... + t_m
+	
+	* |n - m| <= 1
+	
+	* The interleaving is s_1 + t_1 + s_2 + t_2 + s_3 + t_3 + ... or t_1 + s_1 + t_2 + s_2 + t_3 + s_3 + ...
 
-Return the number of different expressions that you can build, which evaluates to target.
+Note: a + b is the concatenation of strings a and b.
 
 
 
 󰛨 Example 1:
 
-	▎	Input: nums = [1,1,1,1,1], target = 3
-	▎	Output: 5
-	▎	Explanation: There are 5 ways to assign symbols to make the sum of nums be target 3.
-	▎	-1 + 1 + 1 + 1 + 1 = 3
-	▎	+1 - 1 + 1 + 1 + 1 = 3
-	▎	+1 + 1 - 1 + 1 + 1 = 3
-	▎	+1 + 1 + 1 - 1 + 1 = 3
-	▎	+1 + 1 + 1 + 1 - 1 = 3
+[img](https://assets.leetcode.com/uploads/2020/09/02/interleave.jpg)
+
+	▎	Input: s1 = "aabcc", s2 = "dbbca", s3 = "aadbbcbcac"
+	▎	Output: true
+	▎	Explanation: One way to obtain s3 is:
+	▎	Split s1 into s1 = "aa" + "bc" + "c", and s2 into s2 = "dbbc" + "a".
+	▎	Interleaving the two splits, we get "aa" + "dbbc" + "bc" + "a" + "c" = "aadbbcbcac".
+	▎	Since s3 can be obtained by interleaving s1 and s2, we return true.
 
 󰛨 Example 2:
 
-	▎	Input: nums = [1], target = 1
-	▎	Output: 1
+	▎	Input: s1 = "aabcc", s2 = "dbbca", s3 = "aadbbbaccc"
+	▎	Output: false
+	▎	Explanation: Notice how it is impossible to interleave s2 with any other string to obtain s3.
+
+󰛨 Example 3:
+
+	▎	Input: s1 = "", s2 = "", s3 = ""
+	▎	Output: true
 
 
 
  Constraints:
 
-	* 1 <= nums.length <= 20
+	* 0 <= s1.length, s2.length <= 100
 	
-	* 0 <= nums[i] <= 1000
+	* 0 <= s3.length <= 200
 	
-	* 0 <= sum(nums[i]) <= 1000
-	
-	* -1000 <= target <= 1000
+	* s1, s2, and s3 consist of lowercase English letters.
+
+
+
+Follow up: Could you solve it using only O(s2.length) additional memory space?
+
 
 
 
@@ -57,18 +72,20 @@ The following is my solution to test:
 ```
 # @leet start
 class Solution:
-    def findTargetSumWays(self, nums: List[int], target: int) -> int:
-        dp: Dict = {}
+    def isInterleave(self, s1: str, s2: str, s3: str) -> bool:
+        if len(s1) + len(s2) != len(s3):
+            return False
 
-        def backtrack(idx, total):
-            if idx == len(nums):
-                return 1 if (total == target) else 0
-            
-            if (idx, total) in dp:
-                return dp[(idx, total)]
+        dp = [[False] * (len(s2)+1) for i in range(len(s1)+1)]
+        dp[len(s1)][len(s2)] = True
 
-            dp[(idx,total)] = backtrack(idx+1, total + nums[idx]) + backtrack(idx+1, total - nums[idx])
-            return dp[(idx,total)]
-        return backtrack(0,0)
+        for idx in range(len(s1), -1, -1):
+            for jdx in range(len(s2), -1, -1):
+                if idx < len(s1) and (s1[idx] == s3[idx + jdx]) and dp[idx+1][jdx]:
+                    dp[idx][jdx] = True
+                if jdx < len(s2) and s2[jdx] == s3[idx + jdx] and dp[idx][jdx +1]:
+                    dp[idx][jdx] = True
+        return dp[0][0]
+        
 # @leet end
 ```
