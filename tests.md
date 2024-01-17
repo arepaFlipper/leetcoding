@@ -1,70 +1,47 @@
 I want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
 
-         https://leetcode.com/problems/interleaving-string/
-                                  
-                       97. Interleaving String
-                Medium | 7968  461  | 39.6% of 1.2M
+https://leetcode.com/problems/distinct-subsequences/
+                        
+           115. Distinct Subsequences
+      Hard | 6397  280  | 46.1% of 788.6K
 
 
 
-Given strings s1, s2, and s3, find whether s3 is formed by an interleaving of s1 and s2.
+Given two strings s and t, return the number of distinct subsequences of s which equals t.
 
-An interleaving of two strings s and t is a configuration where s and t are divided into n and m substrings respectively, such that:
-
-	* s = s_1 + s_2 + ... + s_n
-	
-	* t = t_1 + t_2 + ... + t_m
-	
-	* |n - m| <= 1
-	
-	* The interleaving is s_1 + t_1 + s_2 + t_2 + s_3 + t_3 + ... or t_1 + s_1 + t_2 + s_2 + t_3 + s_3 + ...
-
-Note: a + b is the concatenation of strings a and b.
+The test cases are generated so that the answer fits on a 32-bit signed integer.
 
 
 
 󰛨 Example 1:
 
-[img](https://assets.leetcode.com/uploads/2020/09/02/interleave.jpg)
-
-	▎	Input: s1 = "aabcc", s2 = "dbbca", s3 = "aadbbcbcac"
-	▎	Output: true
-	▎	Explanation: One way to obtain s3 is:
-	▎	Split s1 into s1 = "aa" + "bc" + "c", and s2 into s2 = "dbbc" + "a".
-	▎	Interleaving the two splits, we get "aa" + "dbbc" + "bc" + "a" + "c" = "aadbbcbcac".
-	▎	Since s3 can be obtained by interleaving s1 and s2, we return true.
+	▎	Input: s = "rabbbit", t = "rabbit"
+	▎	Output: 3
+	▎	Explanation:
+	▎	As shown below, there are 3 ways you can generate "rabbit" from s.
+	▎	rabbbit
+	▎	rabbbit
+	▎	rabbbit
 
 󰛨 Example 2:
 
-	▎	Input: s1 = "aabcc", s2 = "dbbca", s3 = "aadbbbaccc"
-	▎	Output: false
-	▎	Explanation: Notice how it is impossible to interleave s2 with any other string to obtain s3.
-
-󰛨 Example 3:
-
-	▎	Input: s1 = "", s2 = "", s3 = ""
-	▎	Output: true
+	▎	Input: s = "babgbag", t = "bag"
+	▎	Output: 5
+	▎	Explanation:
+	▎	As shown below, there are 5 ways you can generate "bag" from s.
+	▎	babgbag
+	▎	babgbag
+	▎	babgbag
+	▎	babgbag
+	▎	babgbag
 
 
 
  Constraints:
 
-	* 0 <= s1.length, s2.length <= 100
+	* 1 <= s.length, t.length <= 1000
 	
-	* 0 <= s3.length <= 200
-	
-	* s1, s2, and s3 consist of lowercase English letters.
-
-
-
-Follow up: Could you solve it using only O(s2.length) additional memory space?
-
-
-
-
-
-
-
+	* s and t consist of English letters.
 
 
 
@@ -72,20 +49,20 @@ The following is my solution to test:
 ```
 # @leet start
 class Solution:
-    def isInterleave(self, s1: str, s2: str, s3: str) -> bool:
-        if len(s1) + len(s2) != len(s3):
-            return False
+    def numDistinct(self, s: str, t: str) -> int:
+        cache = {}
 
-        dp = [[False] * (len(s2)+1) for i in range(len(s1)+1)]
-        dp[len(s1)][len(s2)] = True
+        for idx in range(len(s) +1):
+            cache[(idx,len(t))] = 1
+        for jdx in range(len(t)):
+            cache[(len(s), jdx)] = 0
 
-        for idx in range(len(s1), -1, -1):
-            for jdx in range(len(s2), -1, -1):
-                if idx < len(s1) and (s1[idx] == s3[idx + jdx]) and dp[idx+1][jdx]:
-                    dp[idx][jdx] = True
-                if jdx < len(s2) and s2[jdx] == s3[idx + jdx] and dp[idx][jdx +1]:
-                    dp[idx][jdx] = True
-        return dp[0][0]
-        
+        for i in range(len(s) -1, -1,-1):
+            for j in range(len(t) -1, -1, -1):
+                if s[i] == t[j]:
+                    cache[(i,j)] = cache[(i+1,j+1)] + cache[(i+1,j)]
+                else:
+                    cache[(i,j)] = cache[(i+1,j)]
+        return cache[(0,0)]
 # @leet end
 ```
