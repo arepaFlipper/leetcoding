@@ -1,47 +1,51 @@
 I want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
 
-https://leetcode.com/problems/distinct-subsequences/
-                        
-           115. Distinct Subsequences
-      Hard | 6397  280  | 46.1% of 788.6K
+                https://leetcode.com/problems/edit-distance/
+                                      
+                             72. Edit Distance
+                   Medium | 14298  192  | 55.9% of 1.4M
 
 
 
-Given two strings s and t, return the number of distinct subsequences of s which equals t.
+Given two strings word1 and word2, return the minimum number of operations required to convert word1 to word2.
 
-The test cases are generated so that the answer fits on a 32-bit signed integer.
+You have the following three operations permitted on a word:
+
+	* Insert a character
+	
+	* Delete a character
+	
+	* Replace a character
 
 
 
 󰛨 Example 1:
 
-	▎	Input: s = "rabbbit", t = "rabbit"
+	▎	Input: word1 = "horse", word2 = "ros"
 	▎	Output: 3
-	▎	Explanation:
-	▎	As shown below, there are 3 ways you can generate "rabbit" from s.
-	▎	rabbbit
-	▎	rabbbit
-	▎	rabbbit
+	▎	Explanation: 
+	▎	horse -> rorse (replace 'h' with 'r')
+	▎	rorse -> rose (remove 'r')
+	▎	rose -> ros (remove 'e')
 
 󰛨 Example 2:
 
-	▎	Input: s = "babgbag", t = "bag"
+	▎	Input: word1 = "intention", word2 = "execution"
 	▎	Output: 5
-	▎	Explanation:
-	▎	As shown below, there are 5 ways you can generate "bag" from s.
-	▎	babgbag
-	▎	babgbag
-	▎	babgbag
-	▎	babgbag
-	▎	babgbag
+	▎	Explanation: 
+	▎	intention -> inention (remove 't')
+	▎	inention -> enention (replace 'i' with 'e')
+	▎	enention -> exention (replace 'n' with 'x')
+	▎	exention -> exection (replace 'n' with 'c')
+	▎	exection -> execution (insert 'u')
 
 
 
  Constraints:
 
-	* 1 <= s.length, t.length <= 1000
+	* 0 <= word1.length, word2.length <= 500
 	
-	* s and t consist of English letters.
+	* word1 and word2 consist of lowercase English letters.
 
 
 
@@ -49,20 +53,22 @@ The following is my solution to test:
 ```
 # @leet start
 class Solution:
-    def numDistinct(self, s: str, t: str) -> int:
-        cache = {}
+    def minDistance(self, word1: str, word2: str) -> int:
+        dp: List = [[float("inf")] * (len(word2) +1) for idx in range(len(word1) +1)]
 
-        for idx in range(len(s) +1):
-            cache[(idx,len(t))] = 1
-        for jdx in range(len(t)):
-            cache[(len(s), jdx)] = 0
+        for idx in range (len(word2)+1):
+            dp[len(word1)][idx] = len(word2) - idx
 
-        for i in range(len(s) -1, -1,-1):
-            for j in range(len(t) -1, -1, -1):
-                if s[i] == t[j]:
-                    cache[(i,j)] = cache[(i+1,j+1)] + cache[(i+1,j)]
+        for idx in range(len(word1) +1):
+            dp[idx][len(word2)] = len(word1) - idx
+
+        for idx in range(len(word1)-1,-1,-1):
+            for jdx in range(len(word2)-1,-1,-1):
+                if word1[idx] == word2[jdx]:
+                    dp[idx][jdx] = dp[idx+1][jdx+1]
                 else:
-                    cache[(i,j)] = cache[(i+1,j)]
-        return cache[(0,0)]
+                    dp[idx][jdx] = 1 + min(dp[idx + 1][jdx], dp[idx][jdx+1], dp[idx+1][jdx+1])
+        return dp[0][0]
+        
 # @leet end
 ```
