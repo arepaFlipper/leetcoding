@@ -1,51 +1,42 @@
 I want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
 
-                https://leetcode.com/problems/edit-distance/
-                                      
-                             72. Edit Distance
-                   Medium | 14298  192  | 55.9% of 1.4M
+                         https://leetcode.com/problems/burst-balloons/
+                                               
+                                      312. Burst Balloons
+                              Hard | 8724  231  | 58.4% of 455K
 
 
 
-Given two strings word1 and word2, return the minimum number of operations required to convert word1 to word2.
+You are given n balloons, indexed from 0 to n - 1. Each balloon is painted with a number on it represented by an array nums. You are asked to burst all the balloons.
 
-You have the following three operations permitted on a word:
+If you burst the i^th balloon, you will get nums[i - 1] * nums[i] * nums[i + 1] coins. If i - 1 or i + 1 goes out of bounds of the array, then treat it as if there is a balloon with a 1 painted on it.
 
-	* Insert a character
-	
-	* Delete a character
-	
-	* Replace a character
+Return the maximum coins you can collect by bursting the balloons wisely.
 
 
 
 󰛨 Example 1:
 
-	▎	Input: word1 = "horse", word2 = "ros"
-	▎	Output: 3
-	▎	Explanation: 
-	▎	horse -> rorse (replace 'h' with 'r')
-	▎	rorse -> rose (remove 'r')
-	▎	rose -> ros (remove 'e')
+	▎	Input: nums = [3,1,5,8]
+	▎	Output: 167
+	▎	Explanation:
+	▎	nums = [3,1,5,8] --> [3,5,8] --> [3,8] --> [8] --> []
+	▎	coins =  3*1*5    +   3*5*8   +  1*3*8  + 1*8*1 = 167
 
 󰛨 Example 2:
 
-	▎	Input: word1 = "intention", word2 = "execution"
-	▎	Output: 5
-	▎	Explanation: 
-	▎	intention -> inention (remove 't')
-	▎	inention -> enention (replace 'i' with 'e')
-	▎	enention -> exention (replace 'n' with 'x')
-	▎	exention -> exection (replace 'n' with 'c')
-	▎	exection -> execution (insert 'u')
+	▎	Input: nums = [1,5]
+	▎	Output: 10
 
 
 
  Constraints:
 
-	* 0 <= word1.length, word2.length <= 500
+	* n == nums.length
 	
-	* word1 and word2 consist of lowercase English letters.
+	* 1 <= n <= 300
+	
+	* 0 <= nums[i] <= 100
 
 
 
@@ -53,22 +44,19 @@ The following is my solution to test:
 ```
 # @leet start
 class Solution:
-    def minDistance(self, word1: str, word2: str) -> int:
-        dp: List = [[float("inf")] * (len(word2) +1) for idx in range(len(word1) +1)]
+    def maxCoins(self, nums: List[int]) -> int:
+        cache = {}
+        nums = [1] + nums + [1]
 
-        for idx in range (len(word2)+1):
-            dp[len(word1)][idx] = len(word2) - idx
+        for offset in range(2, len(nums)):
+            for left in range(len(nums)- offset):
+                right = left + offset
+                for pivot in range(left +1, right):
+                    coins = nums[left] * nums[pivot] * nums[right]
+                    coins += cache.get((left,pivot), 0) + cache.get((pivot, right),0)
+                    cache[(left,right)] = max(coins, cache.get((left, right), 0))
+        return cache.get((0, len(nums) -1 ),0)
 
-        for idx in range(len(word1) +1):
-            dp[idx][len(word2)] = len(word1) - idx
-
-        for idx in range(len(word1)-1,-1,-1):
-            for jdx in range(len(word2)-1,-1,-1):
-                if word1[idx] == word2[jdx]:
-                    dp[idx][jdx] = dp[idx+1][jdx+1]
-                else:
-                    dp[idx][jdx] = 1 + min(dp[idx + 1][jdx], dp[idx][jdx+1], dp[idx+1][jdx+1])
-        return dp[0][0]
         
 # @leet end
 ```
