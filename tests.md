@@ -1,42 +1,53 @@
 I want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
 
-                         https://leetcode.com/problems/burst-balloons/
+                  https://leetcode.com/problems/regular-expression-matching/
                                                
-                                      312. Burst Balloons
-                              Hard | 8724  231  | 58.4% of 455K
+                                10. Regular Expression Matching
+                             Hard | 11783  2046  | 28.0% of 3.2M
 
 
 
-You are given n balloons, indexed from 0 to n - 1. Each balloon is painted with a number on it represented by an array nums. You are asked to burst all the balloons.
+Given an input string s and a pattern p, implement regular expression matching with support for '.' and '*' where:
 
-If you burst the i^th balloon, you will get nums[i - 1] * nums[i] * nums[i + 1] coins. If i - 1 or i + 1 goes out of bounds of the array, then treat it as if there is a balloon with a 1 painted on it.
+	* '.' Matches any single character.
+	
+	* '*' Matches zero or more of the preceding element.
 
-Return the maximum coins you can collect by bursting the balloons wisely.
+The matching should cover the entire input string (not partial).
 
 
 
 󰛨 Example 1:
 
-	▎	Input: nums = [3,1,5,8]
-	▎	Output: 167
-	▎	Explanation:
-	▎	nums = [3,1,5,8] --> [3,5,8] --> [3,8] --> [8] --> []
-	▎	coins =  3*1*5    +   3*5*8   +  1*3*8  + 1*8*1 = 167
+	▎	Input: s = "aa", p = "a"
+	▎	Output: false
+	▎	Explanation: "a" does not match the entire string "aa".
 
 󰛨 Example 2:
 
-	▎	Input: nums = [1,5]
-	▎	Output: 10
+	▎	Input: s = "aa", p = "a*"
+	▎	Output: true
+	▎	Explanation: '*' means zero or more of the preceding element, 'a'. Therefore, by repeating 'a' once, it becomes "aa".
+
+󰛨 Example 3:
+
+	▎	Input: s = "ab", p = ".*"
+	▎	Output: true
+	▎	Explanation: ".*" means "zero or more (*) of any character (.)".
 
 
 
  Constraints:
 
-	* n == nums.length
+	* 1 <= s.length <= 20
 	
-	* 1 <= n <= 300
+	* 1 <= p.length <= 20
 	
-	* 0 <= nums[i] <= 100
+	* s contains only lowercase English letters.
+	
+	* p contains only lowercase English letters, '.', and '*'.
+	
+	* It is guaranteed for each appearance of the character '*', there will be a previous valid character to match.
 
 
 
@@ -44,19 +55,21 @@ The following is my solution to test:
 ```
 # @leet start
 class Solution:
-    def maxCoins(self, nums: List[int]) -> int:
-        cache = {}
-        nums = [1] + nums + [1]
+    def isMatch(self, s: str, p: str) -> bool:
+        cache = [[False] * (len(p) + 1) for i in range(len(s)+1)]
+        cache[len(s)][len(p)] = True
 
-        for offset in range(2, len(nums)):
-            for left in range(len(nums)- offset):
-                right = left + offset
-                for pivot in range(left +1, right):
-                    coins = nums[left] * nums[pivot] * nums[right]
-                    coins += cache.get((left,pivot), 0) + cache.get((pivot, right),0)
-                    cache[(left,right)] = max(coins, cache.get((left, right), 0))
-        return cache.get((0, len(nums) -1 ),0)
+        for idx in range(len(s), -1,-1):
+            for jdx in range(len(p)-1,-1,-1):
+                match = idx < len(s) and (s[idx] == p[jdx] or p[jdx] == ".")
 
+                if (jdx +1) < len(p) and p[jdx +1] == "*":
+                    cache[idx][jdx] = cache[idx][jdx+2]
+                    if match:
+                        cache[idx][jdx] = cache[idx+1][jdx] or cache[idx][jdx]
+                elif match:
+                    cache[idx][jdx] = cache[idx+1][jdx +1]
+        return cache[0][0]
         
 # @leet end
 ```
