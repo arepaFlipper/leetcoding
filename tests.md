@@ -1,53 +1,49 @@
 I want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
 
-                  https://leetcode.com/problems/regular-expression-matching/
+                       https://leetcode.com/problems/number-of-islands/
                                                
-                                10. Regular Expression Matching
-                             Hard | 11783  2046  | 28.0% of 3.2M
+                                    200. Number of Islands
+                            Medium | 21825  477  | 58.3% of 4.2M
 
 
 
-Given an input string s and a pattern p, implement regular expression matching with support for '.' and '*' where:
+Given an m x n 2D binary grid grid which represents a map of '1's (land) and '0's (water), return the number of islands.
 
-	* '.' Matches any single character.
-	
-	* '*' Matches zero or more of the preceding element.
-
-The matching should cover the entire input string (not partial).
+An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.
 
 
 
 󰛨 Example 1:
 
-	▎	Input: s = "aa", p = "a"
-	▎	Output: false
-	▎	Explanation: "a" does not match the entire string "aa".
+	▎	Input: grid = [
+	▎	  ["1","1","1","1","0"],
+	▎	  ["1","1","0","1","0"],
+	▎	  ["1","1","0","0","0"],
+	▎	  ["0","0","0","0","0"]
+	▎	]
+	▎	Output: 1
 
 󰛨 Example 2:
 
-	▎	Input: s = "aa", p = "a*"
-	▎	Output: true
-	▎	Explanation: '*' means zero or more of the preceding element, 'a'. Therefore, by repeating 'a' once, it becomes "aa".
-
-󰛨 Example 3:
-
-	▎	Input: s = "ab", p = ".*"
-	▎	Output: true
-	▎	Explanation: ".*" means "zero or more (*) of any character (.)".
+	▎	Input: grid = [
+	▎	  ["1","1","0","0","0"],
+	▎	  ["1","1","0","0","0"],
+	▎	  ["0","0","1","0","0"],
+	▎	  ["0","0","0","1","1"]
+	▎	]
+	▎	Output: 3
 
 
 
  Constraints:
 
-	* 1 <= s.length <= 20
+	* m == grid.length
 	
-	* 1 <= p.length <= 20
+	* n == grid[i].length
 	
-	* s contains only lowercase English letters.
+	* 1 <= m, n <= 300
 	
-	* p contains only lowercase English letters, '.', and '*'.
-	
-	* It is guaranteed for each appearance of the character '*', there will be a previous valid character to match.
+	* grid[i][j] is '0' or '1'.
 
 
 
@@ -55,21 +51,33 @@ The following is my solution to test:
 ```
 # @leet start
 class Solution:
-    def isMatch(self, s: str, p: str) -> bool:
-        cache = [[False] * (len(p) + 1) for i in range(len(s)+1)]
-        cache[len(s)][len(p)] = True
+    def numIslands(self, grid: List[List[str]]) -> int:
+        if not grid: return 0
+    
+        (ROWS, COLS) = len(grid), len(grid[0])
+        visited = set()
+        islands = 0
 
-        for idx in range(len(s), -1,-1):
-            for jdx in range(len(p)-1,-1,-1):
-                match = idx < len(s) and (s[idx] == p[jdx] or p[jdx] == ".")
+        def bfs(r,c):
+            q = deque()
+            visited.add((r,c))
+            q.append((r,c))
 
-                if (jdx +1) < len(p) and p[jdx +1] == "*":
-                    cache[idx][jdx] = cache[idx][jdx+2]
-                    if match:
-                        cache[idx][jdx] = cache[idx+1][jdx] or cache[idx][jdx]
-                elif match:
-                    cache[idx][jdx] = cache[idx+1][jdx +1]
-        return cache[0][0]
-        
+            while q:
+                (row,col) = q.popleft()
+                directions = [[1,0],[-1,0],[0,1],[0,-1]]
+
+                for (dr,dc) in directions:
+                    (r,c) = (row + dr, col + dc)
+                    if (r) in range(ROWS) and (c)in range(COLS) and grid[r][c] == '1' and (r,c) not in visited:
+                        q.append((r, c))
+                        visited.add((r,c))
+
+        for r in range(ROWS):
+            for c in range(COLS):
+                if grid[r][c] == "1" and (r,c) not in visited:
+                    bfs(r,c)
+                    islands += 1
+        return islands
 # @leet end
 ```
