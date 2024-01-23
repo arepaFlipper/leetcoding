@@ -1,83 +1,106 @@
 I want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
 
-                       https://leetcode.com/problems/number-of-islands/
+                          https://leetcode.com/problems/clone-graph/
                                                
-                                    200. Number of Islands
-                            Medium | 21825  477  | 58.3% of 4.2M
+                                       133. Clone Graph
+                             Medium | 9131  3657  | 56.1% of 2M
 
 
 
-Given an m x n 2D binary grid grid which represents a map of '1's (land) and '0's (water), return the number of islands.
+Given a reference of a node in a [connected](https://en.wikipedia.org/wiki/Connectivity_(graph_theory)#Connected_graph) undirected graph.
 
-An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.
+Return a [deep copy](https://en.wikipedia.org/wiki/Object_copying#Deep_copy) (clone) of the graph.
+
+Each node in the graph contains a value (int) and a list (List[Node]) of its neighbors.
+
+	▎	class Node {
+	▎	    public int val;
+	▎	    public List<Node> neighbors;
+	▎	}
+
+
+
+Test case format:
+
+For simplicity, each node's value is the same as the node's index (1-indexed). For example, the first node with val == 1, the second node with val == 2, and so on. The graph is represented in the test case using an adjacency list.
+
+An adjacency list is a collection of unordered lists used to represent a finite graph. Each list describes the set of neighbors of a node in the graph.
+
+The given node will always be the first node with val = 1. You must return the copy of the given node as a reference to the cloned graph.
 
 
 
 󰛨 Example 1:
 
-	▎	Input: grid = [
-	▎	  ["1","1","1","1","0"],
-	▎	  ["1","1","0","1","0"],
-	▎	  ["1","1","0","0","0"],
-	▎	  ["0","0","0","0","0"]
-	▎	]
-	▎	Output: 1
+[img](https://assets.leetcode.com/uploads/2019/11/04/133_clone_graph_question.png)
+
+	▎	Input: adjList = [[2,4],[1,3],[2,4],[1,3]]
+	▎	Output: [[2,4],[1,3],[2,4],[1,3]]
+	▎	Explanation: There are 4 nodes in the graph.
+	▎	1st node (val = 1)'s neighbors are 2nd node (val = 2) and 4th node (val = 4).
+	▎	2nd node (val = 2)'s neighbors are 1st node (val = 1) and 3rd node (val = 3).
+	▎	3rd node (val = 3)'s neighbors are 2nd node (val = 2) and 4th node (val = 4).
+	▎	4th node (val = 4)'s neighbors are 1st node (val = 1) and 3rd node (val = 3).
 
 󰛨 Example 2:
 
-	▎	Input: grid = [
-	▎	  ["1","1","0","0","0"],
-	▎	  ["1","1","0","0","0"],
-	▎	  ["0","0","1","0","0"],
-	▎	  ["0","0","0","1","1"]
-	▎	]
-	▎	Output: 3
+[img](https://assets.leetcode.com/uploads/2020/01/07/graph.png)
+
+	▎	Input: adjList = [[]]
+	▎	Output: [[]]
+	▎	Explanation: Note that the input contains one empty list. The graph consists of only one node with val = 1 and it does not have any neighbors.
+
+󰛨 Example 3:
+
+	▎	Input: adjList = []
+	▎	Output: []
+	▎	Explanation: This an empty graph, it does not have any nodes.
 
 
 
  Constraints:
 
-	* m == grid.length
+	* The number of nodes in the graph is in the range [0, 100].
 	
-	* n == grid[i].length
+	* 1 <= Node.val <= 100
 	
-	* 1 <= m, n <= 300
+	* Node.val is unique for each node.
 	
-	* grid[i][j] is '0' or '1'.
+	* There are no repeated edges and no self-loops in the graph.
+	
+	* The Graph is connected and all nodes can be visited starting from the given node.
+
 
 
 
 The following is my solution to test:
+
 ```
 # @leet start
+"""
+# Definition for a Node.
+class Node:
+    def __init__(self, val = 0, neighbors = None):
+        self.val = val
+        self.neighbors = neighbors if neighbors is not None else []
+"""
+
+from typing import Optional
 class Solution:
-    def numIslands(self, grid: List[List[str]]) -> int:
-        if not grid: return 0
+    def cloneGraph(self, node: Optional['Node']) -> Optional['Node']:
+        old_to_new: Dict = {}
+
+        def depth_first_search(node):
+            if node in old_to_new:
+                return old_to_new[node]
     
-        (ROWS, COLS) = len(grid), len(grid[0])
-        visited = set()
-        islands = 0
+            node_copied = Node(node.val)
+            old_to_new[node] = node_copied
+            for neighbor in node.neighbors:
+                node_copied.neighbors.append(depth_first_search(neighbor))
+            return node_copied
 
-        def bfs(r,c):
-            q = deque()
-            visited.add((r,c))
-            q.append((r,c))
-
-            while q:
-                (row,col) = q.popleft()
-                directions = [[1,0],[-1,0],[0,1],[0,-1]]
-
-                for (dr,dc) in directions:
-                    (r,c) = (row + dr, col + dc)
-                    if (r) in range(ROWS) and (c)in range(COLS) and grid[r][c] == '1' and (r,c) not in visited:
-                        q.append((r, c))
-                        visited.add((r,c))
-
-        for r in range(ROWS):
-            for c in range(COLS):
-                if grid[r][c] == "1" and (r,c) not in visited:
-                    bfs(r,c)
-                    islands += 1
-        return islands
+        return depth_first_search(node) if node else None
+        
 # @leet end
 ```
