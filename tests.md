@@ -1,56 +1,40 @@
 I want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
 
-                                              https://leetcode.com/problems/rotting-oranges/
+                                              https://leetcode.com/problems/walls-and-gates/
                                                                      
-                                                           994. Rotting Oranges
+                                                           286. Walls and Gates
                                                  Medium  | 12214  384  | 53.8% of 1.4M
 
 
 
-You are given an m x n grid where each cell can have one of three values:
+You are given an m x n grid rooms initialized with these three possible values
 
-	* 0 representing an empty cell,
+	* -1 A wall or an obstacle.
 	
-	* 1 representing a fresh orange, or
+	* 0 A gate.
 	
-	* 2 representing a rotten orange.
+	* `INF` Infinity means an empty room, We use the value `2^31 -1 = 2147483647` to represent `INF` as you may assume that the distance to a gate is less than `2147483647`.
 
-Every minute, any fresh orange that is 4-directionally adjacent to a rotten orange becomes rotten.
-
-Return the minimum number of minutes that must elapse until no cell has a fresh orange. If this is impossible, return -1.
-
+Fill each empty room with the distance to its nearest gate. If it is impossible to reach a gate, it should be filled with `INF`.
 
 
 󰛨 Example 1:
 
-[img](https://assets.leetcode.com/uploads/2019/02/16/oranges.png)
+[img](https://assets.leetcode.com/uploads/2019/02/16/example.png)
 
-	▎	Input: grid = [[2,1,1],[1,1,0],[0,1,1]]
-	▎	Output: 4
-
-󰛨 Example 2:
-
-	▎	Input: grid = [[2,1,1],[0,1,1],[1,0,1]]
-	▎	Output: -1
-	▎	Explanation: The orange in the bottom left corner (row 2, column 0) is never rotten, because rotting only happens 4-directionally.
-
-󰛨 Example 3:
-
-	▎	Input: grid = [[0,2]]
-	▎	Output: 0
-	▎	Explanation: Since there are already no fresh oranges at minute 0, the answer is just 0.
-
+	▎	Input: rooms = [[2147483647,-1,0,2147483647],[2147483647,2147483647,2147483647,-1],[2147483647,-1,2147483647,-1],[0,-1,2147483647,2147483647]]
+	▎	Output: [[3,-1,0,1], [2,2,1,-1],[1,-1,2,-1],[0,-1,3,4]]
 
 
  Constraints:
 
-	* m == grid.length
+	* m == rooms.length
 	
-	* n == grid[i].length
+	* n == rooms[i].length
 	
 	* 1 <= m, n <= 10
 	
-	* grid[i][j] is 0, 1, or 2.
+	* rooms[i][j] is 0, 1, or 2.
 
 
 
@@ -61,30 +45,44 @@ The following is my solution to test:
 ```
 # @leet start
 class Solution:
-    def orangesRotting(self, grid: List[List[int]]) -> int:
-        q = collections.deque()
-        (fresh, time) = (0,0)
+    """
+    @param rooms: m x n 2D grid
+    @return: nothing
+    """
 
-        for row in range(len(grid)):
-            for col in range(len(grid[0])):
-                if grid[row][col] == 1:
-                    fresh += 1
-                if grid[row][col] == 2:
-                    q.append((row,col))
+    def walls_and_gates(self, rooms: List[List[int]]):
+        ROWS, COLS = len(rooms), len(rooms[0])
+        visit = set()
+        q = deque()
 
-        directions = [[0,1],[0,-1], [1,0], [-1,0]]
-        while fresh > 0 and q:
-            length = len(q)
-            for idx in range(length):
-                (row, col) = q.popleft()
+        def addRooms(r, c):
+            if (
+                min(r, c) < 0
+                or r == ROWS
+                or c == COLS
+                or (r, c) in visit
+                or rooms[r][c] == -1
+            ):
+                return
+            visit.add((r, c))
+            q.append([r, c])
 
-                for (row_direction,col_direction) in directions:
-                    (delta_row,delta_col) = (row + row_direction, col + col_direction)
-                    if((delta_row in range(len(grid))) and (delta_col in range(len(grid[0]))) and (grid[delta_row][delta_col] == 1)):
-                        grid[delta_row][delta_col] = 2
-                        q.append((delta_row,delta_col))
-                        fresh -= 1
-            time += 1
-        return time if fresh == 0 else -1
+        for r in range(ROWS):
+            for c in range(COLS):
+                if rooms[r][c] == 0:
+                    q.append([r, c])
+                    visit.add((r, c))
+
+        dist = 0
+        while q:
+            for i in range(len(q)):
+                r, c = q.popleft()
+                rooms[r][c] = dist
+                addRooms(r + 1, c)
+                addRooms(r - 1, c)
+                addRooms(r, c + 1)
+                addRooms(r, c - 1)
+            dist += 1
+
 # @leet end
 ```
