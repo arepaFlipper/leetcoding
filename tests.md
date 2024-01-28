@@ -1,40 +1,47 @@
 I want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
 
-                                              https://leetcode.com/problems/walls-and-gates/
-                                                                     
-                                                           286. Walls and Gates
-                                                 Medium  | 12214  384  | 53.8% of 1.4M
+               https://leetcode.com/problems/course-schedule/
+                                      
+                            207. Course Schedule
+              Medium | 15696  651  | 46.5% of 3.1M | 󰛨 Hints
 
 
 
-You are given an m x n grid rooms initialized with these three possible values
+There are a total of numCourses courses you have to take, labeled from 0 to numCourses - 1. You are given an array prerequisites where prerequisites[i] = [a_i, b_i] indicates that you must take course b_i first if you want to take course a_i.
 
-	* -1 A wall or an obstacle.
-	
-	* 0 A gate.
-	
-	* `INF` Infinity means an empty room, We use the value `2^31 -1 = 2147483647` to represent `INF` as you may assume that the distance to a gate is less than `2147483647`.
+	* For example, the pair [0, 1], indicates that to take course 0 you have to first take course 1.
 
-Fill each empty room with the distance to its nearest gate. If it is impossible to reach a gate, it should be filled with `INF`.
+Return true if you can finish all courses. Otherwise, return false.
+
 
 
 󰛨 Example 1:
 
-[img](https://assets.leetcode.com/uploads/2019/02/16/example.png)
+	▎ Input: numCourses = 2, prerequisites = [[1,0]]
+	▎ Output: true
+	▎ Explanation: There are a total of 2 courses to take. 
+	▎ To take course 1 you should have finished course 0. So it is possible.
 
-	▎	Input: rooms = [[2147483647,-1,0,2147483647],[2147483647,2147483647,2147483647,-1],[2147483647,-1,2147483647,-1],[0,-1,2147483647,2147483647]]
-	▎	Output: [[3,-1,0,1], [2,2,1,-1],[1,-1,2,-1],[0,-1,3,4]]
+󰛨 Example 2:
+
+	▎ Input: numCourses = 2, prerequisites = [[1,0],[0,1]]
+	▎ Output: false
+	▎ Explanation: There are a total of 2 courses to take. 
+	▎ To take course 1 you should have finished course 0, and to take course 0 you should also have finished course 1. So it is impossible.
+
 
 
  Constraints:
 
-	* m == rooms.length
+	* 1 <= numCourses <= 2000
 	
-	* n == rooms[i].length
+	* 0 <= prerequisites.length <= 5000
 	
-	* 1 <= m, n <= 10
+	* prerequisites[i].length == 2
 	
-	* rooms[i][j] is 0, 1, or 2.
+	* 0 <= a_i, b_i < numCourses
+	
+	* All the pairs prerequisites[i] are unique.
 
 
 
@@ -45,44 +52,31 @@ The following is my solution to test:
 ```
 # @leet start
 class Solution:
-    """
-    @param rooms: m x n 2D grid
-    @return: nothing
-    """
+    def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
+        pre_map = {i: [] for i in range(numCourses)}
 
-    def walls_and_gates(self, rooms: List[List[int]]):
-        ROWS, COLS = len(rooms), len(rooms[0])
-        visit = set()
-        q = deque()
+        for course, pre_requisite in prerequisites:
+            pre_map[course].append(pre_requisite)
 
-        def addRooms(r, c):
-            if (
-                min(r, c) < 0
-                or r == ROWS
-                or c == COLS
-                or (r, c) in visit
-                or rooms[r][c] == -1
-            ):
-                return
-            visit.add((r, c))
-            q.append([r, c])
+        visiting = set()
 
-        for r in range(ROWS):
-            for c in range(COLS):
-                if rooms[r][c] == 0:
-                    q.append([r, c])
-                    visit.add((r, c))
+        def depth_first_search(course):
+            if course in visiting:
+                return False
+            if pre_map[course] == []:
+                return True
+        
+            visiting.add(course)
+            for pre in pre_map[course]:
+                if not depth_first_search(pre):
+                    return False
+            visiting.remove(course)
+            pre_map[course] = []
+            return True
 
-        dist = 0
-        while q:
-            for i in range(len(q)):
-                r, c = q.popleft()
-                rooms[r][c] = dist
-                addRooms(r + 1, c)
-                addRooms(r - 1, c)
-                addRooms(r, c + 1)
-                addRooms(r, c - 1)
-            dist += 1
-
+        for crs in range(numCourses):
+            if not depth_first_search(crs):
+                return False
+        return True
 # @leet end
 ```
