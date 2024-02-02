@@ -1,53 +1,46 @@
 I want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
 
-                 https://leetcode.com/problems/word-ladder/
+               https://leetcode.com/problems/insert-interval/
                                       
-                              127. Word Ladder
-                   Hard | 11673  1853  | 38.6% of 2.6M
+                            57. Insert Interval
+                   Medium | 9452  703  | 39.8% of 2.3M
 
 
 
-A transformation sequence from word beginWord to word endWord using a dictionary wordList is a sequence of words beginWord -> s_1 -> s_2 -> ... -> s_k such that:
+You are given an array of non-overlapping intervals intervals where intervals[i] = [start_i, end_i] represent the start and the end of the i^th interval and intervals is sorted in ascending order by start_i. You are also given an interval newInterval = [start, end] that represents the start and end of another interval.
 
-	* Every adjacent pair of words differs by a single letter.
-	
-	* Every s_i for 1 <= i <= k is in wordList. Note that beginWord does not need to be in wordList.
-	
-	* s_k == endWord
+Insert newInterval into intervals such that intervals is still sorted in ascending order by start_i and intervals still does not have any overlapping intervals (merge overlapping intervals if necessary).
 
-Given two words, beginWord and endWord, and a dictionary wordList, return the number of words in the shortest transformation sequence from beginWord to endWord, or 0 if no such sequence exists.
+Return intervals after the insertion.
 
 
 
 󰛨 Example 1:
 
-	▎ Input: beginWord = "hit", endWord = "cog", wordList = ["hot","dot","dog","lot","log","cog"]
-	▎ Output: 5
-	▎ Explanation: One shortest transformation sequence is "hit" -> "hot" -> "dot" -> "dog" -> cog", which is 5 words long.
+	▎ Input: intervals = [[1,3],[6,9]], newInterval = [2,5]
+	▎ Output: [[1,5],[6,9]]
 
 󰛨 Example 2:
 
-	▎ Input: beginWord = "hit", endWord = "cog", wordList = ["hot","dot","dog","lot","log"]
-	▎ Output: 0
-	▎ Explanation: The endWord "cog" is not in wordList, therefore there is no valid transformation sequence.
+	▎ Input: intervals = [[1,2],[3,5],[6,7],[8,10],[12,16]], newInterval = [4,8]
+	▎ Output: [[1,2],[3,10],[12,16]]
+	▎ Explanation: Because the new interval [4,8] overlaps with [3,5],[6,7],[8,10].
 
 
 
  Constraints:
 
-	* 1 <= beginWord.length <= 10
+	* 0 <= intervals.length <= 10^4
 	
-	* endWord.length == beginWord.length
+	* intervals[i].length == 2
 	
-	* 1 <= wordList.length <= 5000
+	* 0 <= start_i <= end_i <= 10^5
 	
-	* wordList[i].length == beginWord.length
+	* intervals is sorted by start_i in ascending order.
 	
-	* beginWord, endWord, and wordList[i] consist of lowercase English letters.
+	* newInterval.length == 2
 	
-	* beginWord != endWord
-	
-	* All the words in wordList are unique.
+	* 0 <= start <= end <= 10^5
 
 
 
@@ -56,33 +49,26 @@ Given two words, beginWord and endWord, and a dictionary wordList, return the nu
 The following is my solution to test:
 
 ```
+from typing import List
+
 # @leet start
 class Solution:
-    def ladderLength(self, beginWord: str, endWord: str, wordList: List[str]) -> int:
-        if endWord not in wordList:
-            return 0
-    
-        nei = collections.defaultdict(list)
-        wordList.append(beginWord)
-        for word in wordList:
-            for j in range(len(word)):
-                pattern = word[:j] + "*" + word[j+1:]
-                nei[pattern].append(word)
+    def insert(self, intervals: List[List[int]], newInterval: List[int]) -> List[List[int]]:
+        res: List = []
 
-        visit = set([beginWord])
-        q = deque([beginWord])
-        res = 1
-        while q:
-            for i in range(len(q)):
-                word = q.popleft()
-                if word == endWord:
-                    return res
-                for j in range(len(word)):
-                    pattern = word[:j] + "*" + word[j+1:]
-                    for nei_word in nei[pattern]:
-                        if nei_word not in visit:
-                            visit.add(nei_word)
-                            q.append(nei_word)
-            res += 1
-        return 0
+        for idx in range(len(intervals)):
+            if newInterval[1]< intervals[idx][0]:
+                res.append(newInterval)
+                return res + intervals[idx:]
+            elif newInterval[0] > intervals[idx][1]:
+                res.append(intervals[idx])
+            else:
+                newInterval = [
+                    min(newInterval[0], intervals[idx][0]),
+                    max(newInterval[1], intervals[idx][1]),
+                ]
+        res.append(newInterval)
+        return res
+        
+# @leet end
 ```
