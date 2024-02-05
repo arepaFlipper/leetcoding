@@ -1,53 +1,45 @@
 I want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
 
-   https://leetcode.com/problems/minimum-interval-to-include-each-query/
+              https://leetcode.com/problems/maximum-subarray/
                                       
-                1851. Minimum Interval to Include Each Query
-                Hard | 880  26  | 49.3% of 56.7K | 󰛨 Hints
+                            53. Maximum Subarray
+                  Medium | 33100  1390  | 50.6% of 7.2M
 
 
 
-You are given a 2D integer array intervals, where intervals[i] = [left_i, right_i] describes the i^th interval starting at left_i and ending at right_i (inclusive). The size of an interval is defined as the number of integers it contains, or more formally right_i - left_i + 1.
-
-You are also given an integer array queries. The answer to the j^th query is the size of the smallest interval i such that left_i <= queries[j] <= right_i. If no such interval exists, the answer is -1.
-
-Return an array containing the answers to the queries.
+Given an integer array nums, find the subarray with the largest sum, and return its sum.
 
 
 
 󰛨 Example 1:
 
-	▎ Input: intervals = [[1,4],[2,4],[3,6],[4,4]], queries = [2,3,4,5]
-	▎ Output: [3,3,1,4]
-	▎ Explanation: The queries are processed as follows:
-	▎ - Query = 2: The interval [2,4] is the smallest interval containing 2. The answer is 4 - 2 + 1 = 3.
-	▎ - Query = 3: The interval [2,4] is the smallest interval containing 3. The answer is 4 - 2 + 1 = 3.
-	▎ - Query = 4: The interval [4,4] is the smallest interval containing 4. The answer is 4 - 4 + 1 = 1.
-	▎ - Query = 5: The interval [3,6] is the smallest interval containing 5. The answer is 6 - 3 + 1 = 4.
+	▎ Input: nums = [-2,1,-3,4,-1,2,1,-5,4]
+	▎ Output: 6
+	▎ Explanation: The subarray [4,-1,2,1] has the largest sum 6.
 
 󰛨 Example 2:
 
-	▎ Input: intervals = [[2,3],[2,5],[1,8],[20,25]], queries = [2,19,5,22]
-	▎ Output: [2,-1,4,6]
-	▎ Explanation: The queries are processed as follows:
-	▎ - Query = 2: The interval [2,3] is the smallest interval containing 2. The answer is 3 - 2 + 1 = 2.
-	▎ - Query = 19: None of the intervals contain 19. The answer is -1.
-	▎ - Query = 5: The interval [2,5] is the smallest interval containing 5. The answer is 5 - 2 + 1 = 4.
-	▎ - Query = 22: The interval [20,25] is the smallest interval containing 22. The answer is 25 - 20 + 1 = 6.
+	▎ Input: nums = [1]
+	▎ Output: 1
+	▎ Explanation: The subarray [1] has the largest sum 1.
+
+󰛨 Example 3:
+
+	▎ Input: nums = [5,4,-1,7,8]
+	▎ Output: 23
+	▎ Explanation: The subarray [5,4,-1,7,8] has the largest sum 23.
 
 
 
  Constraints:
 
-	* 1 <= intervals.length <= 10^5
+	* 1 <= nums.length <= 10^5
 	
-	* 1 <= queries.length <= 10^5
-	
-	* intervals[i].length == 2
-	
-	* 1 <= left_i <= right_i <= 10^7
-	
-	* 1 <= queries[j] <= 10^7
+	* -10^4 <= nums[i] <= 10^4
+
+
+
+Follow up: If you have figured out the O(n) solution, try coding another solution using the divide and conquer approach, which is more subtle.
 
 
 
@@ -57,25 +49,19 @@ Return an array containing the answers to the queries.
 The following is my solution to test:
 
 ```
-from typing import List
-
 # @leet start
 class Solution:
-    def minInterval(self, intervals: List[List[int]], queries: List[int]) -> List[int]:
-        intervals.sort()
-        min_heap = []
-        res = {}
-        i = 0
-        for q in sorted(queries):
-            while i < len(intervals) and intervals[i][0] <= q:
-                (left, right) = intervals[i]
-                heapq.heappush(min_heap, (right - left +1, right))
-                i += 1
+    def maxSubArray(self, nums: List[int]) -> int:
+        res: int = nums[0]
 
-            while min_heap and min_heap[0][1] < q:
-                heapq.heappop(min_heap)
-            res[q] = min_heap[0][0] if min_heap else -1
-        return [res[q] for q in queries]
+        total: int = 0
 
+        for n in nums:
+            total += n
+            res = max(res, total)
+            if total < 0:
+                total = 0
+
+        return res
 # @leet end
 ```
