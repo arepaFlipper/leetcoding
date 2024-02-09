@@ -1,44 +1,55 @@
 I want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
 
-                https://leetcode.com/problems/jump-game-ii/
+                 https://leetcode.com/problems/gas-station/
                                       
-                              45. Jump Game II
-                   Medium | 14042  522  | 40.3% of 2.8M
+                              134. Gas Station
+                  Medium | 11526  1058  | 45.6% of 1.6M
 
 
 
-You are given a 0-indexed array of integers nums of length n. You are initially positioned at nums[0].
+There are n gas stations along a circular route, where the amount of gas at the i^th station is gas[i].
 
-Each element nums[i] represents the maximum length of a forward jump from index i. In other words, if you are at nums[i], you can jump to any nums[i + j] where:
+You have a car with an unlimited gas tank and it costs cost[i] of gas to travel from the i^th station to its next (i + 1)^th station. You begin the journey with an empty tank at one of the gas stations.
 
-	* 0 <= j <= nums[i] and
-	
-	* i + j < n
-
-Return the minimum number of jumps to reach nums[n - 1]. The test cases are generated such that you can reach nums[n - 1].
+Given two integer arrays gas and cost, return the starting gas station's index if you can travel around the circuit once in the clockwise direction, otherwise return -1. If there exists a solution, it is guaranteed to be unique
 
 
 
 󰛨 Example 1:
 
-	▎ Input: nums = [2,3,1,1,4]
-	▎ Output: 2
-	▎ Explanation: The minimum number of jumps to reach the last index is 2. Jump 1 step from index 0 to 1, then 3 steps to the last index.
+	▎ Input: gas = [1,2,3,4,5], cost = [3,4,5,1,2]
+	▎ Output: 3
+	▎ Explanation:
+	▎ Start at station 3 (index 3) and fill up with 4 unit of gas. Your tank = 0 + 4 = 4
+	▎ Travel to station 4. Your tank = 4 - 1 + 5 = 8
+	▎ Travel to station 0. Your tank = 8 - 2 + 1 = 7
+	▎ Travel to station 1. Your tank = 7 - 3 + 2 = 6
+	▎ Travel to station 2. Your tank = 6 - 4 + 3 = 5
+	▎ Travel to station 3. The cost is 5. Your gas is just enough to travel back to station 3.
+	▎ Therefore, return 3 as the starting index.
 
 󰛨 Example 2:
 
-	▎ Input: nums = [2,3,0,1,4]
-	▎ Output: 2
+	▎ Input: gas = [2,3,4], cost = [3,4,3]
+	▎ Output: -1
+	▎ Explanation:
+	▎ You can't start at station 0 or 1, as there is not enough gas to travel to the next station.
+	▎ Let's start at station 2 and fill up with 4 unit of gas. Your tank = 0 + 4 = 4
+	▎ Travel to station 0. Your tank = 4 - 3 + 2 = 3
+	▎ Travel to station 1. Your tank = 3 - 3 + 3 = 3
+	▎ You cannot travel back to station 2, as it requires 4 unit of gas but you only have 3.
+	▎ Therefore, you can't travel around the circuit once no matter where you start.
 
 
 
  Constraints:
 
-	* 1 <= nums.length <= 10^4
+	* n == gas.length == cost.length
 	
-	* 0 <= nums[i] <= 1000
+	* 1 <= n <= 10^5
 	
-	* It's guaranteed that you can reach nums[n - 1].
+	* 0 <= gas[i], cost[i] <= 10^4
+
 
 
 The following is my solution to test:
@@ -46,16 +57,18 @@ The following is my solution to test:
 ```
 # @leet start
 class Solution:
-    def jump(self, nums: List[int]) -> int:
-        (left, right) = (0,0)
-        res = 0
-        while right < (len(nums)-1):
-           max_jump = 0
-           for idx in range(left, right +1):
-               max_jump = max(max_jump, idx + nums[idx])
-           left = right + 1
-           right = max_jump
-           res += 1
-        return res
-# @leet end
+    def canCompleteCircuit(self, gas: List[int], cost: List[int]) -> int:
+        (start, end) = (len(gas) - 1, 0)
+        total = gas[start] - cost[start]
+
+        while start >= end:
+            while (total < 0) and ( start >= end):
+                start -= 1
+                total += gas[start] - cost[start]
+
+            if start == end:
+                return start
+            total += gas[end] -cost[end]
+            end += 1
+        return -1
 ```
