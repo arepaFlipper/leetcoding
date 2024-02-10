@@ -2,19 +2,17 @@ from typing import List
 # @leet start
 class Solution:
     def canCompleteCircuit(self, gas: List[int], cost: List[int]) -> int:
-        (start, end) = (len(gas) - 1, 0)
-        total = gas[start] - cost[start]
-
-        while (start >= end):
-            while (total < 0) and ( start >= end):
-                start -= 1
-                total += gas[start] - cost[start]
-
-            if start == end:
-                return start
-            total += gas[end] -cost[end]
-            end += 1
-        return -1
+        if sum(gas) < sum(cost):
+            return -1
+        
+        (total, res) = (0,0)
+        for idx in range(len(gas)):
+            total += (gas[idx]- cost[idx])
+            
+            if total < 0:
+                total = 0
+                res = idx +1
+        return res
 
 # Test Case 1
 gas_1 = [1, 2, 3, 4, 5]
