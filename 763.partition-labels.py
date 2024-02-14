@@ -23,6 +23,7 @@ class Solution:
             idx += 1
         return res
 # @leet end
+
 # Test Case 1
 s_1 = "ababcbacadefegdehijhklij"
 expected_output_1 = [9, 7, 8]

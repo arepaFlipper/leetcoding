@@ -1,41 +1,42 @@
 I want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
 
-              https://leetcode.com/problems/partition-labels/
+                https://leetcode.com/problems/single-number/
                                       
-                           763. Partition Labels
-             Medium | 10127  377  | 79.8% of 645.3K | 󰛨 Hints
+                             136. Single Number
+                    Easy | 15995  680  | 72.4% of 3.6M
 
 
 
-You are given a string s. We want to partition the string into as many parts as possible so that each letter appears in at most one part.
+Given a non-empty array of integers nums, every element appears twice except for one. Find that single one.
 
-Note that the partition is done so that after concatenating all the parts in order, the resultant string should be s.
-
-Return a list of integers representing the size of these parts.
+You must implement a solution with a linear runtime complexity and use only constant extra space.
 
 
 
 󰛨 Example 1:
 
-	▎ Input: s = "ababcbacadefegdehijhklij"
-	▎ Output: [9,7,8]
-	▎ Explanation:
-	▎ The partition is "ababcbaca", "defegde", "hijhklij".
-	▎ This is a partition so that each letter appears in at most one part.
-	▎ A partition like "ababcbacadefegde", "hijhklij" is incorrect, because it splits s into less parts.
+	▎ Input: nums = [2,2,1]
+	▎ Output: 1
 
 󰛨 Example 2:
 
-	▎ Input: s = "eccbbbbdec"
-	▎ Output: [10]
+	▎ Input: nums = [4,1,2,1,2]
+	▎ Output: 4
+
+󰛨 Example 3:
+
+	▎ Input: nums = [1]
+	▎ Output: 1
 
 
 
  Constraints:
 
-	* 1 <= s.length <= 500
+	* 1 <= nums.length <= 3 * 10^4
 	
-	* s consists of lowercase English letters.
+	* -3 * 10^4 <= nums[i] <= 3 * 10^4
+	
+	* Each element in the array appears twice except for one element which appears only once.
 
 
 
@@ -49,25 +50,11 @@ The following is my solution to test:
 from typing import List
 
 class Solution:
-    def partitionLabels(self, s: str) -> List[int]:
-        count: Dict = {}
-        res: List = []
-        (idx, length ) = (0, len(s))
-        for jdx in range(length):
-            char = s[jdx]
-            count[char] = jdx
-
-        cur_len = 0
-        goal = 0
-        while idx < length:
-            char = s[idx]
-            goal = max(goal, count[char])
-            cur_len += 1
-
-            if goal == idx:
-                res.append(cur_len)
-                cur_len = 0
-            idx += 1
+    def singleNumber(self, nums: List[int]) -> int:
+        res = 0
+        for n in nums:
+            res = n ^ res
         return res
+        
 # @leet end
 ```
