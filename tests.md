@@ -1,50 +1,39 @@
 I want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
 
-                https://leetcode.com/problems/counting-bits/
+                https://leetcode.com/problems/reverse-bits/
                                       
-                             338. Counting Bits
-               Easy | 10835  508  | 78.0% of 1.3M | 󰛨 Hints
+                             190. Reverse Bits
+                    Easy | 4962  1368  | 57.6% of 1.3M
 
 
 
-Given an integer n, return an array ans of length n + 1 such that for each i (0 <= i <= n), ans[i] is the number of 1's in the binary representation of i.
+Reverse bits of a given 32 bits unsigned integer.
+
+Note:
+
+	* Note that in some languages, such as Java, there is no unsigned integer type. In this case, both input and output will be given as a signed integer type. They should not affect your implementation, as the integer's internal binary representation is the same, whether it is signed or unsigned.
+	
+	* In Java, the compiler represents the signed integers using [2's complement notation](https://en.wikipedia.org/wiki/Two%27s_complement). Therefore, in Example 2 above, the input represents the signed integer -3 and the output represents the signed integer -1073741825.
 
 
 
 󰛨 Example 1:
 
-	▎ Input: n = 2
-	▎ Output: [0,1,1]
-	▎ Explanation:
-	▎ 0 --> 0
-	▎ 1 --> 1
-	▎ 2 --> 10
+	▎ Input: n = 00000010100101000001111010011100
+	▎ Output:    964176192 (00111001011110000010100101000000)
+	▎ Explanation: The input binary string 00000010100101000001111010011100 represents the unsigned integer 43261596, so return 964176192 which its binary representation is 00111001011110000010100101000000.
 
 󰛨 Example 2:
 
-	▎ Input: n = 5
-	▎ Output: [0,1,1,2,1,2]
-	▎ Explanation:
-	▎ 0 --> 0
-	▎ 1 --> 1
-	▎ 2 --> 10
-	▎ 3 --> 11
-	▎ 4 --> 100
-	▎ 5 --> 101
+	▎ Input: n = 11111111111111111111111111111101
+	▎ Output:   3221225471 (10111111111111111111111111111111)
+	▎ Explanation: The input binary string 11111111111111111111111111111101 represents the unsigned integer 4294967293, so return 3221225471 which its binary representation is 10111111111111111111111111111111.
 
 
 
  Constraints:
 
-	* 0 <= n <= 10^5
-
-
-
-Follow up:
-
-	* It is very easy to come up with a solution with a runtime of O(n log n). Can you do it in linear time O(n) and possibly in a single pass?
-	
-	* Can you do it without using any built-in function (i.e., like __builtin_popcount in C++)?
+	* The input must be a binary string of length 32
 
 
 
@@ -60,14 +49,11 @@ The following is my solution to test:
 ```
 # @leet start
 class Solution:
-    def countBits(self, n: int) -> List[int]:
-        dp = [0] * (n+1)
-        offset = 1
-
-        for idx in range( 1, n+1):
-            if offset * 2 == idx:
-                offset = idx
-            dp[idx] = 1 + dp[idx - offset]
-        return dp
+    def reverseBits(self, n: int) -> int:
+        res: int = 0
+        for idx in range(32):
+            bit: int = (n >> idx) & 1
+            res += (bit << (31 - idx))
+        return res
 # @leet end
 ```
