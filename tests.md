@@ -1,43 +1,49 @@
 I want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
 
-                https://leetcode.com/problems/reverse-bits/
+               https://leetcode.com/problems/missing-number/
                                       
-                             190. Reverse Bits
-                    Easy | 4962  1368  | 57.6% of 1.3M
+                            268. Missing Number
+                   Easy | 11334  3276  | 65.1% of 2.9M
 
 
 
-Reverse bits of a given 32 bits unsigned integer.
-
-Note:
-
-	* Note that in some languages, such as Java, there is no unsigned integer type. In this case, both input and output will be given as a signed integer type. They should not affect your implementation, as the integer's internal binary representation is the same, whether it is signed or unsigned.
-	
-	* In Java, the compiler represents the signed integers using [2's complement notation](https://en.wikipedia.org/wiki/Two%27s_complement). Therefore, in Example 2 above, the input represents the signed integer -3 and the output represents the signed integer -1073741825.
+Given an array nums containing n distinct numbers in the range [0, n], return the only number in the range that is missing from the array.
 
 
 
 󰛨 Example 1:
 
-	▎ Input: n = 00000010100101000001111010011100
-	▎ Output:    964176192 (00111001011110000010100101000000)
-	▎ Explanation: The input binary string 00000010100101000001111010011100 represents the unsigned integer 43261596, so return 964176192 which its binary representation is 00111001011110000010100101000000.
+	▎ Input: nums = [3,0,1]
+	▎ Output: 2
+	▎ Explanation: n = 3 since there are 3 numbers, so all numbers are in the range [0,3]. 2 is the missing number in the range since it does not appear in nums.
 
 󰛨 Example 2:
 
-	▎ Input: n = 11111111111111111111111111111101
-	▎ Output:   3221225471 (10111111111111111111111111111111)
-	▎ Explanation: The input binary string 11111111111111111111111111111101 represents the unsigned integer 4294967293, so return 3221225471 which its binary representation is 10111111111111111111111111111111.
+	▎ Input: nums = [0,1]
+	▎ Output: 2
+	▎ Explanation: n = 2 since there are 2 numbers, so all numbers are in the range [0,2]. 2 is the missing number in the range since it does not appear in nums.
+
+󰛨 Example 3:
+
+	▎ Input: nums = [9,6,4,2,3,5,7,0,1]
+	▎ Output: 8
+	▎ Explanation: n = 9 since there are 9 numbers, so all numbers are in the range [0,9]. 8 is the missing number in the range since it does not appear in nums.
 
 
 
  Constraints:
 
-	* The input must be a binary string of length 32
+	* n == nums.length
+	
+	* 1 <= n <= 10^4
+	
+	* 0 <= nums[i] <= n
+	
+	* All the numbers of nums are unique.
 
 
 
-Follow up: If this function is called many times, how would you optimize it?
+Follow up: Could you implement a solution using only O(1) extra space complexity and O(n) runtime complexity?
 
 
 
@@ -49,11 +55,11 @@ The following is my solution to test:
 ```
 # @leet start
 class Solution:
-    def reverseBits(self, n: int) -> int:
-        res: int = 0
-        for idx in range(32):
-            bit: int = (n >> idx) & 1
-            res += (bit << (31 - idx))
+    def missingNumber(self, nums: List[int]) -> int:
+        res = len(nums)
+
+        for idx in range(len(nums)):
+            res += idx - nums[idx]
         return res
 # @leet end
 ```
