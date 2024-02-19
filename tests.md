@@ -1,49 +1,32 @@
 I want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
 
-               https://leetcode.com/problems/missing-number/
+             https://leetcode.com/problems/sum-of-two-integers/
                                       
-                            268. Missing Number
-                   Easy | 11334  3276  | 65.1% of 2.9M
+                          371. Sum of Two Integers
+                  Medium | 4033  5423  | 51.6% of 882.6K
 
 
 
-Given an array nums containing n distinct numbers in the range [0, n], return the only number in the range that is missing from the array.
+Given two integers a and b, return the sum of the two integers without using the operators + and -.
 
 
 
 󰛨 Example 1:
 
-	▎ Input: nums = [3,0,1]
-	▎ Output: 2
-	▎ Explanation: n = 3 since there are 3 numbers, so all numbers are in the range [0,3]. 2 is the missing number in the range since it does not appear in nums.
+	▎ Input: a = 1, b = 2
+	▎ Output: 3
 
 󰛨 Example 2:
 
-	▎ Input: nums = [0,1]
-	▎ Output: 2
-	▎ Explanation: n = 2 since there are 2 numbers, so all numbers are in the range [0,2]. 2 is the missing number in the range since it does not appear in nums.
-
-󰛨 Example 3:
-
-	▎ Input: nums = [9,6,4,2,3,5,7,0,1]
-	▎ Output: 8
-	▎ Explanation: n = 9 since there are 9 numbers, so all numbers are in the range [0,9]. 8 is the missing number in the range since it does not appear in nums.
+	▎ Input: a = 2, b = 3
+	▎ Output: 5
 
 
 
  Constraints:
 
-	* n == nums.length
-	
-	* 1 <= n <= 10^4
-	
-	* 0 <= nums[i] <= n
-	
-	* All the numbers of nums are unique.
+	* -1000 <= a, b <= 1000
 
-
-
-Follow up: Could you implement a solution using only O(1) extra space complexity and O(n) runtime complexity?
 
 
 
@@ -55,11 +38,19 @@ The following is my solution to test:
 ```
 # @leet start
 class Solution:
-    def missingNumber(self, nums: List[int]) -> int:
-        res = len(nums)
-
-        for idx in range(len(nums)):
-            res += idx - nums[idx]
-        return res
+    def getSum(self, a: int, b: int) -> int:
+        def add(a, b):
+            if not a or not b:
+                return a or b
+            return add(a^b, (a&b)<<1)
+        
+        if a * b < 0:
+            if a > 0:
+                return self.getSum(b,a)
+            if add(~a,1) == b:
+                return 0
+            if add(~a,1) < b:
+                return add(~add(add(~a,1), add(~b,1)), 1)
+        return add(a,b)
 # @leet end
 ```
