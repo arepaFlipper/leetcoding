@@ -9,9 +9,9 @@ class Solution:
         if a * b < 0:
             if a > 0:
                 return self.getSum(b,a)
-            if add(~a,1) == b:
+            elif add(~a,1) == b:
                 return 0
-            if add(~a,1) < b:
+            elif add(~a,1) < b:
                 return add(~add(add(~a,1), add(~b,1)), 1)
         return add(a,b)
 # @leet end

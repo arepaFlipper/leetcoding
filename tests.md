@@ -1,31 +1,38 @@
 I want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
 
-             https://leetcode.com/problems/sum-of-two-integers/
+               https://leetcode.com/problems/reverse-integer/
                                       
-                          371. Sum of Two Integers
-                  Medium | 4033  5423  | 51.6% of 882.6K
+                             7. Reverse Integer
+                 Medium | 12533  13357  | 28.3% of 10.8M
 
 
 
-Given two integers a and b, return the sum of the two integers without using the operators + and -.
+Given a signed 32-bit integer x, return x with its digits reversed. If reversing x causes the value to go outside the signed 32-bit integer range [-2^31, 2^31 - 1], then return 0.
+
+Assume the environment does not allow you to store 64-bit integers (signed or unsigned).
 
 
 
 󰛨 Example 1:
 
-	▎ Input: a = 1, b = 2
-	▎ Output: 3
+	│ Input: x = 123
+	│ Output: 321
 
 󰛨 Example 2:
 
-	▎ Input: a = 2, b = 3
-	▎ Output: 5
+	│ Input: x = -123
+	│ Output: -321
+
+󰛨 Example 3:
+
+	│ Input: x = 120
+	│ Output: 21
 
 
 
  Constraints:
 
-	* -1000 <= a, b <= 1000
+	* -2^31 <= x <= 2^31 - 1
 
 
 
@@ -38,19 +45,22 @@ The following is my solution to test:
 ```
 # @leet start
 class Solution:
-    def getSum(self, a: int, b: int) -> int:
-        def add(a, b):
-            if not a or not b:
-                return a or b
-            return add(a^b, (a&b)<<1)
-        
-        if a * b < 0:
-            if a > 0:
-                return self.getSum(b,a)
-            if add(~a,1) == b:
+    def reverse(self, x: int) -> int:
+        MIN = -2147483648
+        MAX = 2147483648
+
+        res = 0
+        while x:
+            digit = int(math.fmod( x , 10))
+            x = int(x/10)
+
+            if (res > MAX // 10) or (res == MAX // 10 and digit > MAX % 10):
                 return 0
-            if add(~a,1) < b:
-                return add(~add(add(~a,1), add(~b,1)), 1)
-        return add(a,b)
+
+            if (res < MIN // 10) or (res == MIN // 10 and digit < MIN % 10):
+                return 0
+
+            res = (res * 10) + digit
+        return res
 # @leet end
 ```
