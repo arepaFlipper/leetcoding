@@ -1,52 +1,47 @@
 I want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
 
-            https://leetcode.com/problems/reconstruct-itinerary/
+       https://leetcode.com/problems/min-cost-to-connect-all-points/
                                       
-                         332. Reconstruct Itinerary
-                   Hard | 5755  1850  | 43.3% of 959.1K
+                    1584. Min Cost to Connect All Points
+             Medium │ 4892  120  │ 66.6% of 400.4K │ 󰛨 Hints
 
 
 
-You are given a list of airline tickets where tickets[i] = [from_i, to_i] represent the departure and the arrival airports of one flight. Reconstruct the itinerary in order and return it.
+You are given an array points representing integer coordinates of some points on a 2D-plane, where points[i] = [x_i, y_i].
 
-All of the tickets belong to a man who departs from "JFK", thus, the itinerary must begin with "JFK". If there are multiple valid itineraries, you should return the itinerary that has the smallest lexical order when read as a single string.
+The cost of connecting two points [x_i, y_i] and [x_j, y_j] is the manhattan distance between them: |x_i - x_j| + |y_i - y_j|, where |val| denotes the absolute value of val.
 
-	* For example, the itinerary ["JFK", "LGA"] has a smaller lexical order than ["JFK", "LGB"].
-
-You may assume all tickets form at least one valid itinerary. You must use all the tickets once and only once.
+Return the minimum cost to make all points connected. All points are connected if there is exactly one simple path between any two points.
 
 
 
 󰛨 Example 1:
 
-[img](https://assets.leetcode.com/uploads/2021/03/14/itinerary1-graph.jpg)
+[img](https://assets.leetcode.com/uploads/2020/08/26/d.png)
 
-	│ Input: tickets = [["MUC","LHR"],["JFK","MUC"],["SFO","SJC"],["LHR","SFO"]]
-	│ Output: ["JFK","MUC","LHR","SFO","SJC"]
+	│ Input: points = [[0,0],[2,2],[3,10],[5,2],[7,0]]
+	│ Output: 20
+	│ Explanation: 
+	│ 
+	│ [img](https://assets.leetcode.com/uploads/2020/08/26/c.png)
+	│ 
+	│ We can connect the points as shown above to get the minimum cost of 20.
+	│ Notice that there is a unique path between every pair of points.
 
 󰛨 Example 2:
 
-[img](https://assets.leetcode.com/uploads/2021/03/14/itinerary2-graph.jpg)
-
-	│ Input: tickets = [["JFK","SFO"],["JFK","ATL"],["SFO","ATL"],["ATL","JFK"],["ATL","SFO"]]
-	│ Output: ["JFK","ATL","JFK","SFO","ATL","SFO"]
-	│ Explanation: Another possible reconstruction is ["JFK","SFO","ATL","JFK","ATL","SFO"] but it is larger in lexical order.
+	│ Input: points = [[3,12],[-2,5],[-4,1]]
+	│ Output: 18
 
 
 
  Constraints:
 
-	* 1 <= tickets.length <= 300
+	* 1 <= points.length <= 1000
 	
-	* tickets[i].length == 2
+	* -10^6 <= x_i, y_i <= 10^6
 	
-	* from_i.length == 3
-	
-	* to_i.length == 3
-	
-	* from_i and to_i consist of uppercase English letters.
-	
-	* from_i != to_i
+	* All pairs (x_i, y_i) are distinct.
 
 
 
@@ -58,32 +53,31 @@ The following is my solution to test:
 
 ```
 # @leet start
+from typing import List
+
 class Solution:
-    def findItinerary(self, tickets: List[List[str]]) -> List[str]:
-        adj: Dict = { source: [] for (source, dist) in tickets }
-        res = []
-
-        for (src, destination) in tickets:
-            adj[src].append(destination)
-
-        for key in adj:
-            adj[key].sort()
-
-        def depth_first_search(adj,result, source):
-            if source in adj:
-                destinations = adj[source][:]
-                while destinations:
-                    dest = destinations[0]
-                    adj[source].pop(0)
-                    depth_first_search(adj, res, dest)
-                    destinations = adj[source][:]
-            res.append(source)
-
-        depth_first_search(adj, res, "JFK")
-        res.reverse()
-
-        if len(res) != len(tickets) +1:
-            return []
+    def minCostConnectPoints(self, points: List[List[int]]) -> int:
+        N: int = len(points)
+        adj : Dict = { i: [] for i in range(N) }
+        for idx in range(N):
+            (x1,y1) = points[idx]
+            for jdx in range(idx +1, N):
+                (x2,y2) = points[jdx]
+                distance = abs(x2 - x1) + abs(y2-y1)
+                adj[idx].append([distance,jdx])
+                adj[jdx].append([distance,idx])
+        res: int = 0
+        visit = set()
+        min_heap = [[0,0]]
+        while len(visit) < N:
+            cost, point = heapq.heappop(min_heap)
+            if point in visit:
+                continue
+            res += cost
+            visit.add(point)
+            for cost_nei, neighbor in adj[point]:
+                if neighbor not in visit:
+                    heapq.heappush(min_heap,[cost_nei, neighbor])
 
         return res
 # @leet end
