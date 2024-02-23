@@ -1,47 +1,52 @@
 I want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
 
-       https://leetcode.com/problems/min-cost-to-connect-all-points/
+             https://leetcode.com/problems/network-delay-time/
                                       
-                    1584. Min Cost to Connect All Points
-             Medium │ 4892  120  │ 66.6% of 400.4K │ 󰛨 Hints
+                          743. Network Delay Time
+              Medium │ 7205  354  │ 53.4% of 864K │ 󰛨 Hints
 
 
 
-You are given an array points representing integer coordinates of some points on a 2D-plane, where points[i] = [x_i, y_i].
+You are given a network of n nodes, labeled from 1 to n. You are also given times, a list of travel times as directed edges times[i] = (u_i, v_i, w_i), where u_i is the source node, v_i is the target node, and w_i is the time it takes for a signal to travel from source to target.
 
-The cost of connecting two points [x_i, y_i] and [x_j, y_j] is the manhattan distance between them: |x_i - x_j| + |y_i - y_j|, where |val| denotes the absolute value of val.
-
-Return the minimum cost to make all points connected. All points are connected if there is exactly one simple path between any two points.
+We will send a signal from a given node k. Return the minimum time it takes for all the n nodes to receive the signal. If it is impossible for all the n nodes to receive the signal, return -1.
 
 
 
 󰛨 Example 1:
 
-[img](https://assets.leetcode.com/uploads/2020/08/26/d.png)
+[img](https://assets.leetcode.com/uploads/2019/05/23/931_example_1.png)
 
-	│ Input: points = [[0,0],[2,2],[3,10],[5,2],[7,0]]
-	│ Output: 20
-	│ Explanation: 
-	│ 
-	│ [img](https://assets.leetcode.com/uploads/2020/08/26/c.png)
-	│ 
-	│ We can connect the points as shown above to get the minimum cost of 20.
-	│ Notice that there is a unique path between every pair of points.
+	│ Input: times = [[2,1,1],[2,3,1],[3,4,1]], n = 4, k = 2
+	│ Output: 2
 
 󰛨 Example 2:
 
-	│ Input: points = [[3,12],[-2,5],[-4,1]]
-	│ Output: 18
+	│ Input: times = [[1,2,1]], n = 2, k = 1
+	│ Output: 1
+
+󰛨 Example 3:
+
+	│ Input: times = [[1,2,1]], n = 2, k = 2
+	│ Output: -1
 
 
 
  Constraints:
 
-	* 1 <= points.length <= 1000
+	* 1 <= k <= n <= 100
 	
-	* -10^6 <= x_i, y_i <= 10^6
+	* 1 <= times.length <= 6000
 	
-	* All pairs (x_i, y_i) are distinct.
+	* times[i].length == 3
+	
+	* 1 <= u_i, v_i <= n
+	
+	* u_i != v_i
+	
+	* 0 <= w_i <= 100
+	
+	* All the pairs (u_i, v_i) are unique. (i.e., no multiple edges.)
 
 
 
@@ -53,32 +58,29 @@ The following is my solution to test:
 
 ```
 # @leet start
-from typing import List
+import collections
 
 class Solution:
-    def minCostConnectPoints(self, points: List[List[int]]) -> int:
-        N: int = len(points)
-        adj : Dict = { i: [] for i in range(N) }
-        for idx in range(N):
-            (x1,y1) = points[idx]
-            for jdx in range(idx +1, N):
-                (x2,y2) = points[jdx]
-                distance = abs(x2 - x1) + abs(y2-y1)
-                adj[idx].append([distance,jdx])
-                adj[jdx].append([distance,idx])
-        res: int = 0
-        visit = set()
-        min_heap = [[0,0]]
-        while len(visit) < N:
-            cost, point = heapq.heappop(min_heap)
-            if point in visit:
-                continue
-            res += cost
-            visit.add(point)
-            for cost_nei, neighbor in adj[point]:
-                if neighbor not in visit:
-                    heapq.heappush(min_heap,[cost_nei, neighbor])
+    def networkDelayTime(self, times: List[List[int]], n: int, k: int) -> int:
+        edges = collections.defaultdict(list)
+        for (u,v,w) in times:
+            edges[u].append((v,w))
 
-        return res
+        min_heap = [(0,k)]
+        visit = set()
+        t = 0
+        while min_heap:
+            (w1,n1) = heapq.heappop(min_heap)
+            if n1 in visit:
+                continue
+            visit.add(n1)
+            t = w1
+
+            for (n2,w2) in edges[n1]:
+                if n2 not in visit:
+                    heapq.heappush(min_heap, (w1+w2,n2))
+
+        return t if len(visit) == n else -1
+        
 # @leet end
 ```
