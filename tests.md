@@ -1,54 +1,71 @@
-I want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
+wListI want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
 
-            https://leetcode.com/problems/swim-in-rising-water/
+       https://leetcode.com/problems/cheapest-flights-within-k-stops/
                                       
-                         778. Swim in Rising Water
-              Hard │ 3517  232  │ 60.5% of 246.8K │ 󰛨 Hints
+                    787. Cheapest Flights Within K Stops
+                   Medium │ 9635  397  │ 39.2% of 1.4M
 
 
 
-You are given an n x n integer matrix grid where each value grid[i][j] represents the elevation at that point (i, j).
+There are n cities connected by some number of flights. You are given an array flights where flights[i] = [from_i, to_i, price_i] indicates that there is a flight from city from_i to city to_i with cost price_i.
 
-The rain starts to fall. At time t, the depth of the water everywhere is t. You can swim from a square to another 4-directionally adjacent square if and only if the elevation of both squares individually are at most t. You can swim infinite distances in zero time. Of course, you must stay within the boundaries of the grid during your swim.
-
-Return the least time until you can reach the bottom right square (n - 1, n - 1) if you start at the top left square (0, 0).
+You are also given three integers src, dst, and k, return the cheapest price from src to dst with at most k stops. If there is no such route, return -1.
 
 
 
 󰛨 Example 1:
 
-[img](https://assets.leetcode.com/uploads/2021/06/29/swim1-grid.jpg)
+[img](https://assets.leetcode.com/uploads/2022/03/18/cheapest-flights-within-k-stops-3drawio.png)
 
-	│ Input: grid = [[0,2],[1,3]]
-	│ Output: 3
+	│ Input: n = 4, flights = [[0,1,100],[1,2,100],[2,0,100],[1,3,600],[2,3,200]], src = 0, dst = 3, k = 1
+	│ Output: 700
 	│ Explanation:
-	│ At time 0, you are in grid location (0, 0).
-	│ You cannot go anywhere else because 4-directionally adjacent neighbors have a higher elevation than t = 0.
-	│ You cannot reach point (1, 1) until time 3.
-	│ When the depth of water is 3, we can swim anywhere inside the grid.
+	│ The graph is shown above.
+	│ The optimal path with at most 1 stop from city 0 to 3 is marked in red and has cost 100 + 600 = 700.
+	│ Note that the path through cities [0,1,2,3] is cheaper but is invalid because it uses 2 stops.
 
 󰛨 Example 2:
 
-[img](https://assets.leetcode.com/uploads/2021/06/29/swim2-grid-1.jpg)
+[img](https://assets.leetcode.com/uploads/2022/03/18/cheapest-flights-within-k-stops-1drawio.png)
 
-	│ Input: grid = [[0,1,2,3,4],[24,23,22,21,5],[12,13,14,15,16],[11,17,18,19,20],[10,9,8,7,6]]
-	│ Output: 16
-	│ Explanation: The final route is shown.
-	│ We need to wait until time 16 so that (0, 0) and (4, 4) are connected.
+	│ Input: n = 3, flights = [[0,1,100],[1,2,100],[0,2,500]], src = 0, dst = 2, k = 1
+	│ Output: 200
+	│ Explanation:
+	│ The graph is shown above.
+	│ The optimal path with at most 1 stop from city 0 to 2 is marked in red and has cost 100 + 100 = 200.
+
+󰛨 Example 3:
+
+[img](https://assets.leetcode.com/uploads/2022/03/18/cheapest-flights-within-k-stops-2drawio.png)
+
+	│ Input: n = 3, flights = [[0,1,100],[1,2,100],[0,2,500]], src = 0, dst = 2, k = 0
+	│ Output: 500
+	│ Explanation:
+	│ The graph is shown above.
+	│ The optimal path with no stops from city 0 to 2 is marked in red and has cost 500.
 
 
 
  Constraints:
 
-	* n == grid.length
+	* 1 <= n <= 100
 	
-	* n == grid[i].length
+	* 0 <= flights.length <= (n * (n - 1) / 2)
 	
-	* 1 <= n <= 50
+	* flights[i].length == 3
 	
-	* 0 <= grid[i][j] < n^2
+	* 0 <= from_i, to_i < n
 	
-	* Each value grid[i][j] is unique.
+	* from_i != to_i
+	
+	* 1 <= price_i <= 10^4
+	
+	* There will not be any multiple flights between two cities.
+	
+	* 0 <= src, dst, k < n
+	
+	* src != dst
+
 
 
 
@@ -60,26 +77,23 @@ The following is my solution to test:
 
 ```
 # @leet start
-import heapq
 from typing import List
 
 class Solution:
-    def swimInWater(self, grid: List[List[int]]) -> int:
-        N = len(grid)
-        visit = set()
-        min_heap = [[grid[0][0], 0, 0]]
-        directions = [[0, 1], [0, -1], [1, 0], [-1, 0]]
+    def findCheapestPrice(self, n: int, flights: List[List[int]], src: int, dst: int, k: int) -> int:
+        prices = [float("inf")] * n
+        prices[src] = 0
 
-        visit.add((0, 0))
-        while min_heap:
-            time, row, col = heapq.heappop(min_heap)
-            if row == N - 1 and col == N - 1:
-                return time
-            for x, y in directions:
-                nei_row, nei_col = row + x, col + y
-                if 0 <= nei_row < N and 0 <= nei_col < N and (nei_row, nei_col) not in visit:
-                    visit.add((nei_row, nei_col))
-                    heapq.heappush(min_heap, [max(time, grid[nei_row][nei_col]), nei_row, nei_col])
+        for idx in range(k+1):
+            tmp_prices = prices.copy()
+
+            for s,d,p in flights:
+                if prices[s] == float("inf"):
+                    continue
+                if prices[s] + p < tmp_prices[d]:
+                    tmp_prices[d] = prices[s] + p
+            prices = tmp_prices
+        return -1 if prices[dst] == float("inf") else prices[dst]
 
 
 # @leet end
