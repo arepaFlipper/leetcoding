@@ -1,53 +1,6 @@
-I want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
-
-                https://leetcode.com/problems/spiral-matrix/
-                                      
-                             54. Spiral Matrix
-             Medium │ 14279  1253  │ 48.9% of 2.7M │ 󰛨 Hints
-
-
-
-Given an m x n matrix, return all elements of the matrix in spiral order.
-
-
-
-󰛨 Example 1:
-
-[img](https://assets.leetcode.com/uploads/2020/11/13/spiral1.jpg)
-
-	│ Input: matrix = [[1,2,3],[4,5,6],[7,8,9]]
-	│ Output: [1,2,3,6,9,8,7,4,5]
-
-󰛨 Example 2:
-
-[img](https://assets.leetcode.com/uploads/2020/11/13/spiral.jpg)
-
-	│ Input: matrix = [[1,2,3,4],[5,6,7,8],[9,10,11,12]]
-	│ Output: [1,2,3,4,8,12,11,10,9,5,6,7]
-
-
-
- Constraints:
-
-	* m == matrix.length
-	
-	* n == matrix[i].length
-	
-	* 1 <= m, n <= 10
-	
-	* -100 <= matrix[i][j] <= 100
-
-
-
-
-
-
-
-
-The following is my solution to test:
-
-```
 # @leet start
+from typing import List
+
 class Solution:
     def spiralOrder(self, matrix: List[List[int]]) -> List[int]:
         res = []
@@ -81,4 +34,30 @@ class Solution:
         return res
 
 # @leet end
-```
+
+# Test Case 1
+matrix_1 = [[1,2,3],[4,5,6],[7,8,9]]
+expected_output_1 = [1,2,3,6,9,8,7,4,5]
+
+print("Test Case 1:")
+output_1 = Solution().spiralOrder(matrix_1)
+print(f"spiralOrder({matrix_1}) => Output:", output_1)
+
+if output_1 == expected_output_1:
+    print("✅ Expected Output")
+else:
+    print("❌ Unexpected Output")
+
+# Test Case 2
+matrix_2 = [[1,2,3,4],[5,6,7,8],[9,10,11,12]]
+expected_output_2 = [1,2,3,4,8,12,11,10,9,5,6,7]
+
+print("\nTest Case 2:")
+output_2 = Solution().spiralOrder(matrix_2)
+print(f"spiralOrder({matrix_2}) => Output:", output_2)
+
+if output_2 == expected_output_2:
+    print("✅ Expected Output")
+else:
+    print("❌ Unexpected Output")
+
