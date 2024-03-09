@@ -1,41 +1,63 @@
 I want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
 
-                https://leetcode.com/problems/spiral-matrix/
+               https://leetcode.com/problems/detect-squares/
                                       
-                             54. Spiral Matrix
-             Medium │ 14279  1253  │ 48.9% of 2.7M │ 󰛨 Hints
+                            2013. Detect Squares
+              Medium │ 806  221  │ 50.7% of 117.9K │ 󰛨 Hints
 
 
 
-Given an m x n matrix, return all elements of the matrix in spiral order.
+You are given a stream of points on the X-Y plane. Design an algorithm that:
+
+	* Adds new points from the stream into a data structure. Duplicate points are allowed and should be treated as different points.
+	
+	* Given a query point, counts the number of ways to choose three points from the data structure such that the three points and the query point form an axis-aligned square with positive area.
+
+An axis-aligned square is a square whose edges are all the same length and are either parallel or perpendicular to the x-axis and y-axis.
+
+Implement the DetectSquares class:
+
+	* DetectSquares() Initializes the object with an empty data structure.
+	
+	* void add(int[] point) Adds a new point point = [x, y] to the data structure.
+	
+	* int count(int[] point) Counts the number of ways to form axis-aligned squares with point point = [x, y] as described above.
 
 
 
 󰛨 Example 1:
 
-[img](https://assets.leetcode.com/uploads/2020/11/13/spiral1.jpg)
+[img](https://assets.leetcode.com/uploads/2021/09/01/image.png)
 
-	│ Input: matrix = [[1,2,3],[4,5,6],[7,8,9]]
-	│ Output: [1,2,3,6,9,8,7,4,5]
-
-󰛨 Example 2:
-
-[img](https://assets.leetcode.com/uploads/2020/11/13/spiral.jpg)
-
-	│ Input: matrix = [[1,2,3,4],[5,6,7,8],[9,10,11,12]]
-	│ Output: [1,2,3,4,8,12,11,10,9,5,6,7]
+	│ Input
+	│ ["DetectSquares", "add", "add", "add", "count", "count", "add", "count"]
+	│ [[], [[3, 10]], [[11, 2]], [[3, 2]], [[11, 10]], [[14, 8]], [[11, 2]], [[11, 10]]]
+	│ Output
+	│ [null, null, null, null, 1, 0, null, 2]
+	│ 
+	│ Explanation
+	│ DetectSquares detectSquares = new DetectSquares();
+	│ detectSquares.add([3, 10]);
+	│ detectSquares.add([11, 2]);
+	│ detectSquares.add([3, 2]);
+	│ detectSquares.count([11, 10]); // return 1. You can choose:
+	│                                //   - The first, second, and third points
+	│ detectSquares.count([14, 8]);  // return 0. The query point cannot form a square with any points in the data structure.
+	│ detectSquares.add([11, 2]);    // Adding duplicate points is allowed.
+	│ detectSquares.count([11, 10]); // return 2. You can choose:
+	│                                //   - The first, second, and third points
+	│                                //   - The first, third, and fourth points
 
 
 
  Constraints:
 
-	* m == matrix.length
+	* point.length == 2
 	
-	* n == matrix[i].length
+	* 0 <= x, y <= 1000
 	
-	* 1 <= m, n <= 10
-	
-	* -100 <= matrix[i][j] <= 100
+	* At most 3000 calls in total will be made to add and count.
+
 
 
 
@@ -48,37 +70,30 @@ The following is my solution to test:
 
 ```
 # @leet start
-class Solution:
-    def spiralOrder(self, matrix: List[List[int]]) -> List[int]:
-        res = []
-        (left, right) = (0, len(matrix[0]))
-        (top, bottom) = (0, len(matrix))
+class DetectSquares:
 
-        while (left < right) and (top < bottom):
-            # get every idx in the top row
-            for idx in range(left,right):
-                res.append(matrix[top][idx])
-            top += 1
+    def __init__(self):
+        self.pts_count = defaultdict(int)
+        self.pts = []
 
-            # get every idx in the right col 
-            for idx in range(top,bottom):
-                res.append(matrix[idx][right-1])
-            right -= 1
+    def add(self, point: List[int]) -> None:
+        self.pts_count[tuple(point)] += 1
+        self.pts.append(point)
 
-            if not (left<right and top < bottom):
-                break
-
-            # get every idx in the bottom row
-            for idx in range(right -1, left - 1, -1):
-                res.append(matrix[bottom-1][idx])
-            bottom -= 1
-
-            # get every idx in the left col
-            for idx in range(bottom -1, top -1, -1):
-                res.append(matrix[idx][left])
-            left += 1
-
+    def count(self, point: List[int]) -> int:
+        res = 0
+        (px, py) = point
+        for x,y in self.pts:
+            if (abs(py-y) != abs(px-x)) or (x == px or y == py):
+                continue
+            res += self.pts_count[(x,py)] * self.pts_count[(px,y)]
         return res
+        
 
+
+# Your DetectSquares object will be instantiated and called as such:
+# obj = DetectSquares()
+# obj.add(point)
+# param_2 = obj.count(point)
 # @leet end
 ```
