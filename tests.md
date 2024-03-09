@@ -1,62 +1,46 @@
 I want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
 
-               https://leetcode.com/problems/detect-squares/
+                https://leetcode.com/problems/happy-number/
                                       
-                            2013. Detect Squares
-              Medium │ 806  221  │ 50.7% of 117.9K │ 󰛨 Hints
+                             202. Happy Number
+                  Easy  │ 10049  1387  │ 55.9% of 2.5M
 
 
 
-You are given a stream of points on the X-Y plane. Design an algorithm that:
+Write an algorithm to determine if a number n is happy.
 
-	* Adds new points from the stream into a data structure. Duplicate points are allowed and should be treated as different points.
+A happy number is a number defined by the following process:
+
+	* Starting with any positive integer, replace the number by the sum of the squares of its digits.
 	
-	* Given a query point, counts the number of ways to choose three points from the data structure such that the three points and the query point form an axis-aligned square with positive area.
-
-An axis-aligned square is a square whose edges are all the same length and are either parallel or perpendicular to the x-axis and y-axis.
-
-Implement the DetectSquares class:
-
-	* DetectSquares() Initializes the object with an empty data structure.
+	* Repeat the process until the number equals 1 (where it will stay), or it loops endlessly in a cycle which does not include 1.
 	
-	* void add(int[] point) Adds a new point point = [x, y] to the data structure.
-	
-	* int count(int[] point) Counts the number of ways to form axis-aligned squares with point point = [x, y] as described above.
+	* Those numbers for which this process ends in 1 are happy.
+
+Return true if n is a happy number, and false if not.
 
 
 
 󰛨 Example 1:
 
-[img](https://assets.leetcode.com/uploads/2021/09/01/image.png)
+	│ Input: n = 19
+	│ Output: true
+	│ Explanation:
+	│ 1^2 + 9^2 = 82
+	│ 8^2 + 2^2 = 68
+	│ 6^2 + 8^2 = 100
+	│ 1^2 + 0^2 + 0^2 = 1
 
-	│ Input
-	│ ["DetectSquares", "add", "add", "add", "count", "count", "add", "count"]
-	│ [[], [[3, 10]], [[11, 2]], [[3, 2]], [[11, 10]], [[14, 8]], [[11, 2]], [[11, 10]]]
-	│ Output
-	│ [null, null, null, null, 1, 0, null, 2]
-	│ 
-	│ Explanation
-	│ DetectSquares detectSquares = new DetectSquares();
-	│ detectSquares.add([3, 10]);
-	│ detectSquares.add([11, 2]);
-	│ detectSquares.add([3, 2]);
-	│ detectSquares.count([11, 10]); // return 1. You can choose:
-	│                                //   - The first, second, and third points
-	│ detectSquares.count([14, 8]);  // return 0. The query point cannot form a square with any points in the data structure.
-	│ detectSquares.add([11, 2]);    // Adding duplicate points is allowed.
-	│ detectSquares.count([11, 10]); // return 2. You can choose:
-	│                                //   - The first, second, and third points
-	│                                //   - The first, third, and fourth points
+󰛨 Example 2:
+
+	│ Input: n = 2
+	│ Output: false
 
 
 
  Constraints:
 
-	* point.length == 2
-	
-	* 0 <= x, y <= 1000
-	
-	* At most 3000 calls in total will be made to add and count.
+	* 1 <= n <= 2^31 - 1
 
 
 
@@ -70,30 +54,21 @@ The following is my solution to test:
 
 ```
 # @leet start
-class DetectSquares:
+class Solution:
+    def isHappy(self, n: int) -> bool:
+        (slow, fast) = (n,self.sumSquareDigits(n))
 
-    def __init__(self):
-        self.pts_count = defaultdict(int)
-        self.pts = []
+        while slow != fast:
+            fast = self.sumSquareDigits(fast)
+            fast = self.sumSquareDigits(fast)
+            slow = self.sumSquareDigits(slow)
 
-    def add(self, point: List[int]) -> None:
-        self.pts_count[tuple(point)] += 1
-        self.pts.append(point)
+        return True if fast == 1 else False
 
-    def count(self, point: List[int]) -> int:
-        res = 0
-        (px, py) = point
-        for x,y in self.pts:
-            if (abs(py-y) != abs(px-x)) or (x == px or y == py):
-                continue
-            res += self.pts_count[(x,py)] * self.pts_count[(px,y)]
-        return res
-        
-
-
-# Your DetectSquares object will be instantiated and called as such:
-# obj = DetectSquares()
-# obj.add(point)
-# param_2 = obj.count(point)
+    def sumSquareDigits(self, n):
+        output = 0
+        while n:
+            output += (n%10) ** 2
+            n = n // 10
 # @leet end
 ```
