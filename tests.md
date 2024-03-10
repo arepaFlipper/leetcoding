@@ -1,58 +1,24 @@
 I want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
 
-              https://leetcode.com/problems/set-matrix-zeroes/
+              https://leetcode.com/problems/alien-dictionary/
                                       
-                           73. Set Matrix Zeroes
-             Medium  │ 13999  705  │ 55.1% of 2.4M │ 󰛨 Hints
+                           269. Alien Dictionary
+             Hard  │ 13999  705  │ 55.1% of 2.4M │ 
 
 
 
-Given an m x n integer matrix matrix, if an element is 0, set its entire row and column to 0's.
+There is a new alien language that uses the English alphabet. However, the order among the letters is unkown to you.
 
-You must do it [in place](https://en.wikipedia.org/wiki/In-place_algorithm).
+You are given a list o strings `words` from the alien language's dictionary, where the strings in `words` are sorted lexicographically by the rules of this new language.
 
+Return a string of the unique letters in the new alien language sorted in lexicographically increasing order by the new language's rules. If there is no solution, return "". If there are multiple solutions, return any of them.
 
+A string `s` is lexicographically smaller than a string `t` if at the first letter where they differ, the letter in `s` comes before the letter in `t` in the alien language. If the first `min(s.length, t.length)` letters are the same, then `s` is smaller if and only if `s.length < t.length`.
 
-󰛨 Example 1:
+Example 1:
 
-[img](https://assets.leetcode.com/uploads/2020/08/17/mat1.jpg)
-
-	│ Input: matrix = [[1,1,1],[1,0,1],[1,1,1]]
-	│ Output: [[1,0,1],[0,0,0],[1,0,1]]
-
-󰛨 Example 2:
-
-[img](https://assets.leetcode.com/uploads/2020/08/17/mat2.jpg)
-
-	│ Input: matrix = [[0,1,2,0],[3,4,5,2],[1,3,1,5]]
-	│ Output: [[0,0,0,0],[0,4,5,0],[0,3,1,0]]
-
-
-
- Constraints:
-
-	* m == matrix.length
-	
-	* n == matrix[0].length
-	
-	* 1 <= m, n <= 200
-	
-	* -2^31 <= matrix[i][j] <= 2^31 - 1
-
-
-
-Follow up:
-
-	* A straightforward solution using O(mn) space is probably a bad idea.
-	
-	* A simple improvement uses O(m + n) space, but still not the best solution.
-	
-	* Could you devise a constant space solution?
-
-
-
-
-
+  Input: words = ["wrt","wrf", "er", "ett","rftt"]
+  Output: "wertf"
 
 
 The following is my solution to test:
@@ -60,35 +26,42 @@ The following is my solution to test:
 ```
 # @leet start
 class Solution:
-    def setZeroes(self, matrix: List[List[int]]) -> None:
-        """
-        Do not return anything, modify matrix in-place instead.
-        """
-        (ROWS, COLS) = (len(matrix), len(matrix[0]))
-        row_zero = False
+    def alienOrder(self, words: List[str]) -> str:
+        adj = {char: set() for word in words for char in word}
 
-        for row in range(ROWS):
-            for col in range(COLS):
-                if matrix[row][col] == 0:
-                    matrix[0][col] = 0
-                    if row > 0:
-                        matrix[row][0] = 0
-                    else:
-                        row_zero = True
+        for i in range(len(words) - 1):
+            w1, w2 = words[i], words[i + 1]
+            minLen = min(len(w1), len(w2))
+            if len(w1) > len(w2) and w1[:minLen] == w2[:minLen]:
+                return ""
+            for j in range(minLen):
+                if w1[j] != w2[j]:
+                    print(w1[j], w2[j])
+                    adj[w1[j]].add(w2[j])
+                    break
 
-        for r in range(1, ROWS):
-            for c in range(1, COLS):
-                if matrix[0][c] == 0 or matrix[r][0] == 0:
-                    matrix[r][c] = 0
+        visited = {}  # {char: bool} False visited, True current path
+        res = []
 
-        if matrix[0][0] == 0:
-            for row in range(ROWS):
-                matrix[row][0] = 0
+        def dfs(char):
+            if char in visited:
+                return visited[char]
 
-        if row_zero:
-            for column in range(COLS):
-                matrix[0][column] = 0
+            visited[char] = True
 
-        
+            for neighChar in adj[char]:
+                if dfs(neighChar):
+                    return True
+
+            visited[char] = False
+            res.append(char)
+
+        for char in adj:
+            if dfs(char):
+                return ""
+
+        res.reverse()
+        return "".join(res)
+
 # @leet end
 ```
