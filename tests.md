@@ -1,67 +1,59 @@
 I want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
 
-              https://leetcode.com/problems/alien-dictionary/
-                                      
-                           269. Alien Dictionary
-             Hard  │ 13999  705  │ 55.1% of 2.4M │ 
+                   https://leetcode.com/problems/house-robber/
+                                        
+                                198. House Robber
+                    Medium  │ 20578  408  │ 50.9% of 4.2M
 
 
 
-There is a new alien language that uses the English alphabet. However, the order among the letters is unkown to you.
+You are a professional robber planning to rob houses along a street. Each house has a certain amount of money stashed, the only constraint stopping you from robbing each of them is that adjacent houses have security systems connected and it will automatically contact the police if two adjacent houses were broken into on the same night.
 
-You are given a list o strings `words` from the alien language's dictionary, where the strings in `words` are sorted lexicographically by the rules of this new language.
+Given an integer array nums representing the amount of money of each house, return the maximum amount of money you can rob tonight without alerting the police.
 
-Return a string of the unique letters in the new alien language sorted in lexicographically increasing order by the new language's rules. If there is no solution, return "". If there are multiple solutions, return any of them.
 
-A string `s` is lexicographically smaller than a string `t` if at the first letter where they differ, the letter in `s` comes before the letter in `t` in the alien language. If the first `min(s.length, t.length)` letters are the same, then `s` is smaller if and only if `s.length < t.length`.
 
-Example 1:
+󰛨 Example 1:
 
-  Input: words = ["wrt","wrf", "er", "ett","rftt"]
-  Output: "wertf"
+	│ Input: nums = [1,2,3,1]
+	│ Output: 4
+	│ Explanation: Rob house 1 (money = 1) and then rob house 3 (money = 3).
+	│ Total amount you can rob = 1 + 3 = 4.
+
+󰛨 Example 2:
+
+	│ Input: nums = [2,7,9,3,1]
+	│ Output: 12
+	│ Explanation: Rob house 1 (money = 2), rob house 3 (money = 9) and rob house 5 (money = 1).
+	│ Total amount you can rob = 2 + 9 + 1 = 12.
+
+
+
+ Constraints:
+
+	* 1 <= nums.length <= 100
+	
+	* 0 <= nums[i] <= 400
+
 
 
 The following is my solution to test:
 
-```
+```py
+from typing import List
+
 # @leet start
 class Solution:
-    def alienOrder(self, words: List[str]) -> str:
-        adj = {char: set() for word in words for char in word}
+    def rob(self, nums: List[int]) -> int:
+        (rob1, rob2) = (0,0)
 
-        for i in range(len(words) - 1):
-            w1, w2 = words[i], words[i + 1]
-            minLen = min(len(w1), len(w2))
-            if len(w1) > len(w2) and w1[:minLen] == w2[:minLen]:
-                return ""
-            for j in range(minLen):
-                if w1[j] != w2[j]:
-                    print(w1[j], w2[j])
-                    adj[w1[j]].add(w2[j])
-                    break
-
-        visited = {}  # {char: bool} False visited, True current path
-        res = []
-
-        def dfs(char):
-            if char in visited:
-                return visited[char]
-
-            visited[char] = True
-
-            for neighChar in adj[char]:
-                if dfs(neighChar):
-                    return True
-
-            visited[char] = False
-            res.append(char)
-
-        for char in adj:
-            if dfs(char):
-                return ""
-
-        res.reverse()
-        return "".join(res)
-
+        for house in nums:
+            tmp = max(house + rob1, rob2)
+            rob1 = rob2
+            rob2 = tmp
+            # print("tmp:", tmp, ", rob1:", rob1, "rob2:", rob2)
+            # __import__('pdb').set_trace() ##DELETEME:
+        return rob2
+         
 # @leet end
 ```
