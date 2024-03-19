@@ -7,12 +7,13 @@ class Solution:
 
         print("👉 nums:", nums)
         for house in nums:
-            tmp = max(house + rob1, rob2)
+            # NOTE: Caculate what is the max revenue we can get by robbing until this point?
+            new_rob = max(house + rob1, rob2)
             rob1 = rob2
-            rob2 = tmp
-            print("house:", house,", tmp:", tmp, ", rob1:", rob1, ", rob2:", rob2)
+            rob2 = new_rob
+            print("house:", house,", new_rob:", new_rob, ", rob1:", rob1, ", rob2:", rob2)
             # __import__('pdb').set_trace() ##DELETEME:
-        return tmp
+        return new_rob
          
 # @leet end
 

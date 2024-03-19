@@ -1,13 +1,13 @@
 I want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
 
-                   https://leetcode.com/problems/house-robber/
+                 https://leetcode.com/problems/house-robber-ii/
                                         
-                                198. House Robber
-                    Medium  │ 20578  408  │ 50.9% of 4.2M
+                              213. House Robber II
+                Medium  │ 9605  141  │ 41.9% of 1.7M │ 󰛨 Hints
 
 
 
-You are a professional robber planning to rob houses along a street. Each house has a certain amount of money stashed, the only constraint stopping you from robbing each of them is that adjacent houses have security systems connected and it will automatically contact the police if two adjacent houses were broken into on the same night.
+You are a professional robber planning to rob houses along a street. Each house has a certain amount of money stashed. All houses at this place are arranged in a circle. That means the first house is the neighbor of the last one. Meanwhile, adjacent houses have a security system connected, and it will automatically contact the police if two adjacent houses were broken into on the same night.
 
 Given an integer array nums representing the amount of money of each house, return the maximum amount of money you can rob tonight without alerting the police.
 
@@ -15,17 +15,21 @@ Given an integer array nums representing the amount of money of each house, retu
 
 󰛨 Example 1:
 
+	│ Input: nums = [2,3,2]
+	│ Output: 3
+	│ Explanation: You cannot rob house 1 (money = 2) and then rob house 3 (money = 2), because they are adjacent houses.
+
+󰛨 Example 2:
+
 	│ Input: nums = [1,2,3,1]
 	│ Output: 4
 	│ Explanation: Rob house 1 (money = 1) and then rob house 3 (money = 3).
 	│ Total amount you can rob = 1 + 3 = 4.
 
-󰛨 Example 2:
+󰛨 Example 3:
 
-	│ Input: nums = [2,7,9,3,1]
-	│ Output: 12
-	│ Explanation: Rob house 1 (money = 2), rob house 3 (money = 9) and rob house 5 (money = 1).
-	│ Total amount you can rob = 2 + 9 + 1 = 12.
+	│ Input: nums = [1,2,3]
+	│ Output: 3
 
 
 
@@ -33,7 +37,8 @@ Given an integer array nums representing the amount of money of each house, retu
 
 	* 1 <= nums.length <= 100
 	
-	* 0 <= nums[i] <= 400
+	* 0 <= nums[i] <= 1000
+
 
 
 
@@ -45,15 +50,15 @@ from typing import List
 # @leet start
 class Solution:
     def rob(self, nums: List[int]) -> int:
-        (rob1, rob2) = (0,0)
+        return max(nums[0], self.helper(nums[1:]), self.helper(nums[:-1]))
+    
+    def helper(self, nums):
+        (rob1, rob2) = 0, 0
 
         for house in nums:
-            tmp = max(house + rob1, rob2)
+            new_rob = max(rob1 + house, rob2)
             rob1 = rob2
-            rob2 = tmp
-            # print("tmp:", tmp, ", rob1:", rob1, "rob2:", rob2)
-            # __import__('pdb').set_trace() ##DELETEME:
+            rob2 = new_rob
         return rob2
-         
 # @leet end
 ```
