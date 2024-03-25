@@ -3,9 +3,16 @@ from typing import List
 class Solution:
     def canJump(self, nums: List[int]) -> bool:
         target: int = len(nums) -1
-        for idx in range(len(nums) -2, -1, -1):
-            if idx + nums[idx] >= target:
+        # for idx in range(len(nums) -2, -1, -1):
+        #     print("idx: ",idx, ",nums[idx]: ", nums[idx])
+        #     if idx + nums[idx] >= target:
+        #         target = idx
+        #         print("new target: ", target)
+        reverse_nums = [nums[idx] for idx in range(len(nums)-2,-1,-1)]
+        for (value, idx) in enumerate(reverse_nums):
+            if idx + value >= target:
                 target = idx
+                print("new target: ", target)
         return target == 0
         
 # @leet end
@@ -48,3 +55,15 @@ if output_3 == expected_output_3:
 else:
     print("❌ Unexpected Output")
 
+# Test Case 4
+nums_4 = [4, 1, 0, 0, 3, 0, 0,0]
+expected_output_4 = True
+
+print("\nTest Case 4:")
+output_4 = Solution().canJump(nums_4)
+print(f"canJump({nums_4}) => Output:", output_4)
+
+if output_4 == expected_output_4:
+    print("✅ Expected Output")
+else:
+    print("❌ Unexpected Output")
