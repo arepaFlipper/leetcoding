@@ -11,6 +11,7 @@ class Solution:
             res = max(res, total)
             if total < 0:
                 total = 0
+            print("n: ", n, "total: ", total, "res: ", res)
 
         return res
 # @leet end
