@@ -3,7 +3,11 @@ use std::collections::HashMap;
 impl Solution {
     pub fn is_valid(s: String) -> bool {
         let mut stack: Vec<char> = Vec::new();
-        let opening = HashMap::from([(']', '['), (')', '('), ('}', '{')]);
+        let opening = HashMap::from ([
+            (']', '['), 
+            (')', '('), 
+            ('}', '{')
+        ]);
 
         for c in s.chars() {
             match c {
@@ -19,8 +23,7 @@ impl Solution {
                 }
             }
         }
-
         stack.is_empty()
+        
     }
 }
-
