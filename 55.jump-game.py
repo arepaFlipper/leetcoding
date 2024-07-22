@@ -2,18 +2,27 @@ from typing import List
 # @leet start
 class Solution:
     def canJump(self, nums: List[int]) -> bool:
-        target: int = len(nums) -1
-        # for idx in range(len(nums) -2, -1, -1):
-        #     print("idx: ",idx, ",nums[idx]: ", nums[idx])
-        #     if idx + nums[idx] >= target:
-        #         target = idx
-        #         print("new target: ", target)
-        reverse_nums = [nums[idx] for idx in range(len(nums)-2,-1,-1)]
-        for (value, idx) in enumerate(reverse_nums):
-            if idx + value >= target:
-                target = idx
-                print("new target: ", target)
-        return target == 0
+        goal = len(nums) - 1
+        for idx in range(goal-2, -1,-1):
+            print("""🦱   \x1b[1;33;40m55.jump-game.py:7    idx:""") ## DELETEME:
+            print(idx) ## DELETEME:
+            print('\x1b[0m') ## DELETEME:
+            if idx + nums[idx] >= goal:
+                goal = idx
+        return goal == 0
+
+        # def backtrack(position):
+        #     length = len(nums) - 1
+        #     if position == length:
+        #         return True
+        #
+        #     furthest_jump = min(position + nums[position], len(nums) -1)
+        #     for next_position in range(position + 1, furthest_jump + 1):
+        #         if backtrack(next_position):
+        #             return True
+        #
+        #     return False
+        # return backtrack(0)
         
 # @leet end
 # Test Case 1
