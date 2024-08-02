@@ -1,9 +1,9 @@
-I want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
+I want you to write the tests to my code in python (Please don't solve it, I want to come up with the solution) in the same manner you've been doing early in this chat, here is my problem:
 
-             https://leetcode.com/problems/merge-two-sorted-lists/
+              https://leetcode.com/problems/merge-two-sorted-lists/
                                         
                            21. Merge Two Sorted Lists
-                    Easy  │ 21563  2099  │ 64.4% of 6.5M
+                     Easy  │ 21812  2127  │ 64.8% of 6.7M
 
 
 
@@ -44,45 +44,3 @@ Return the head of the merged linked list.
 
 
 
-
-
-
-The following is my solution to test:
-
-```rust
-// @leet start
-// Definition for singly-linked list.
-// #[derive(PartialEq, Eq, Clone, Debug)]
-// pub struct ListNode {
-//   pub val: i32,
-//   pub next: Option<Box<ListNode>>
-// }
-// 
-// impl ListNode {
-//   #[inline]
-//   fn new(val: i32) -> Self {
-//     ListNode {
-//       next: None,
-//       val
-//     }
-//   }
-// }
-
-impl Solution {
-    pub fn merge_two_lists(list1: Option<Box<ListNode>>, list2: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
-        match (list1, list2){
-            (Some(list1), None)=> Some(list1),
-            (None, Some(list2))=> Some(list2),
-            (None, None)=> None,
-            (Some(l1), Some(l2)) => {
-                if l1.val<l2.val {
-                    return Some(Box::new(ListNode{val: l1.val, next:Solution::merge_two_lists(l1.next,Some(l2))}));
-                } else {
-                    return Some(Box::new(ListNode {val: l2.val, next: Solution::merge_two_lists(Some(l1),l2.next) }))
-                }
-            }
-        }
-    }
-}
-// @leet end
-```
