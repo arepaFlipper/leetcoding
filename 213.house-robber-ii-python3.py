@@ -2,20 +2,16 @@ from typing import List
 # @leet start
 class Solution:
     def rob(self, nums: List[int]) -> int:
-        second = self.helper(nums[1:])
-        last_but_one = self.helper(nums[:-1])
-        print("second: ",second,"last_but_one: ",last_but_one)
-        return max(nums[0], second, last_but_one)
-    
-    def helper(self, nums):
-        (rob1, rob2) = 0, 0
+        return max(nums[0], self.helper(nums[1:]), self.helper(nums[:-1]))
 
+    def helper(self, nums):
+        (rob1, rob2) = (0,0)
         for house in nums:
-            # Caculate what is the max revenue we can get by robbing until this point?
-            new_rob = max(rob1 + house, rob2)
+            temp = max (house + rob1, rob2)
             rob1 = rob2
-            rob2 = new_rob
+            rob2 = temp
         return rob2
+        
 # @leet end
 
 # Test Case 1

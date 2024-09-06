@@ -1,17 +1,15 @@
 # @leet start
 class Solution:
     def climbStairs(self, n: int) -> int:
-        if n <= 3:
+        if n<=3:
             return n
+        (n1, n2) = 2,3
 
-        (n1, n2) = (2, 3)
-
-        for i in range(4, n + 1):
+        for i in range(4, n +1):
             temp = n1 + n2
             n1 = n2
             n2 = temp
         return n2
-
 
 solution = Solution()
 
@@ -46,6 +44,22 @@ else:
     print("❌ Unexpected Output")
 
 # Additional Test Case
+input_n_3 = 4
+expected_output_3 = 5
+result_3 = solution.climbStairs(input_n_3)
+
+print("\nAdditional Test Case:")
+print("Input:")
+print("n:", input_n_3)
+print("Output:", result_3)
+print("Expected:", expected_output_3)
+
+if result_3 == expected_output_3:
+    print("✅ Expected Output")
+else:
+    print("❌ Unexpected Output")
+#
+# Additional Test Case
 input_n_3 = 5
 expected_output_3 = 8
 result_3 = solution.climbStairs(input_n_3)
@@ -54,6 +68,7 @@ print("\nAdditional Test Case:")
 print("Input:")
 print("n:", input_n_3)
 print("Output:", result_3)
+print("Expected:", expected_output_3)
 
 if result_3 == expected_output_3:
     print("✅ Expected Output")

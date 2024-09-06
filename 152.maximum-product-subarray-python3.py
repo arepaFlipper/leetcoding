@@ -2,13 +2,13 @@ from typing import List
 # @leet start
 class Solution:
     def maxProduct(self, nums: List[int]) -> int:
-        res: int = nums[0]
-        (current_min, current_max) = (1, 1)
+        res = max(nums)
+        (current_max, current_min) = (1,1)
 
-        for number in nums:
-            temp = current_max * number
-            current_max = max(number, temp, current_min * number)
-            current_min = min(temp, current_min * number, number)
+        for num in nums:
+            cur_prod = num * current_max
+            current_max = max(cur_prod, num * current_min, num)
+            current_min = min(cur_prod, num * current_min, num)
             res = max(res, current_max)
         return res
 
@@ -44,4 +44,19 @@ if result_2 == expected_output_2:
     print("✅ Expected Output")
 else:
     print("❌ Unexpected Output")
+
+# Test Case 3
+nums_3 = [-4,-3]
+expected_output_3 = 12
+result_3 = solution.maxProduct(nums_3)
+
+print("\nTest Case 3:")
+print("Input:")
+print("nums:", nums_3)
+print("Output:", result_3)
+
+if result_3 == expected_output_3:
+    print("✅ Expected Output")
+else:
+    print("❌ Unexpected Output\nExpected:", expected_output_3)
 

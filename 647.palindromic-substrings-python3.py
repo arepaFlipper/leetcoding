@@ -3,20 +3,22 @@ class Solution:
     def countSubstrings(self, s: str) -> int:
         res = 0
 
-        for idx in range(len(s)):
-            res += self.countPali(s, idx, idx)
-            res += self.countPali(s, idx, idx + 1)
-        
-        return res
-    
-    def countPali(self, s, left, right):
-        res = 0
-        while left >= 0 and right < len(s) and s[left] == s[right]:
-            res += 1
-            left -= 1
-            right += 1
-        return res
+        for left in range(len(s)):
+            right = left
+            while (0<= left) and (right<len(s)):
+                if s[left] == s[right]:
+                    res = res + 1
+                left = left - 1
+                right = right + 1
 
+        for left in range(len(s)):
+            right = left +1
+            while (0<= left) and (right<len(s)):
+                if s[left] == s[right]:
+                    res = res + 1
+                left = left - 1
+                right = right + 1
+        return res
 
 solution = Solution()
 
@@ -52,7 +54,7 @@ else:
 
 # Additional Test Case
 input_str_3 = "racecar"
-expected_output_3 = 9
+expected_output_3 = 10
 result_3 = solution.countSubstrings(input_str_3)
 
 print("\nAdditional Test Case:")
@@ -63,5 +65,5 @@ print("Output:", result_3)
 if result_3 == expected_output_3:
     print("✅ Expected Output")
 else:
-    print("❌ Unexpected Output")
+    print("❌ Unexpected Output, \n Expected: ", expected_output_3)
 # @leet end

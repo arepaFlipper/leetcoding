@@ -3,18 +3,18 @@ from typing import List
 
 class Solution:
     def wordBreak(self, s: str, wordDict: List[str]) -> bool:
-        dp = [False] * (len(s)+1)
-        dp[len(s)] = True
-
-        for idx in range(len(s) -1, -1,-1):
-            for word in wordDict:
-                if (idx + len(word)) <= len(s) and (s[idx: idx+len(word)] == word):
-                    dp[idx] = dp[idx+len(word)]
-                if dp[idx]:
+        hash = {}
+        for word in wordDict:
+            for idx in range(len(s)):
+                sub_string = s[idx:len(word)]
+                print("""🔕   \x1b[1;34;40m139.word-break-python3.py:9  sub_string:""") ## DELETEME:
+                print(sub_string) ## DELETEME:
+                print('\x1b[0m') ## DELETEME:
+                if len(sub_string) < len(word):
                     break
-
-        return dp[0]
-
+                if sub_string == word:
+                    return True
+        return False
 # @leet end
 
 solution = Solution()

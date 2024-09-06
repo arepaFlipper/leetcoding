@@ -2,19 +2,27 @@
 class Solution:
     def longestPalindrome(self, s: str) -> str:
         longest_palindrome = ""
-        length = len(s)
-        start = 0
-        end = start
-        while start <= length:
-            while end <= length:
-                current = s[start:end]
-                if current == current[::-1] and len(current)> len(longest_palindrome):
-                    longest_palindrome = current
+        longest_len = len (longest_palindrome)
+
+        def expandAroundCenter(start: int, end: int):
+            nonlocal longest_palindrome, longest_len
+            while (0 <= start) and (end < len(s)) and s[start] == s[end]:
+                if( end - start + 1) > longest_len:
+                    longest_palindrome = s[start: end + 1]
+                    longest_len = end - start + 1
+                start = start - 1
                 end = end + 1
-            start = start + 1
-            end = start
+
+        for idx in range(len(s)):
+            # even
+            expandAroundCenter(idx, idx)
+            expandAroundCenter(idx, idx+1)
+            # odd
 
         return longest_palindrome
+
+            
+
 
 # @leet end
 
@@ -68,8 +76,18 @@ def test_longest_palindrome_case_5():
     assert result == expected, f"Expected {expected}, but got {result}"
     print("Case 5 succeed 👍")
 
+def test_longest_palindrome_case_7():
+    solution = Solution()
+    s = "jglknendplocymmvwtoxvebkekzfdhykknufqdkntnqvgfbahsljkobhbxkvyictzkqjqydczuxjkgecdyhixdttxfqmgksrkyvopwprsgoszftuhawflzjyuyrujrxluhzjvbflxgcovilthvuihzttzithnsqbdxtafxrfrblulsakrahulwthhbjcslceewxfxtavljpimaqqlcbrdgtgjryjytgxljxtravwdlnrrauxplempnbfeusgtqzjtzshwieutxdytlrrqvyemlyzolhbkzhyfyttevqnfvmpqjngcnazmaagwihxrhmcibyfkccyrqwnzlzqeuenhwlzhbxqxerfifzncimwqsfatudjihtumrtjtggzleovihifxufvwqeimbxvzlxwcsknksogsbwwdlwulnetdysvsfkonggeedtshxqkgbhoscjgpiel"
+    expected = "sknks"
+    result = solution.longestPalindrome(s)
+    assert result == expected, f"Expected {expected}, but got {result}"
+    print("Case 7 succeed 👍")
+
+
 def main():
     # Simulate running tests
+    test_longest_palindrome_case_7()
     test_longest_palindrome_case_6()
     test_longest_palindrome_case_1()
     test_longest_palindrome_case_2()

@@ -2,18 +2,29 @@ from typing import List
 
 class Solution:
     def coinChange(self, coins: List[int], amount: int) -> int:
-        dp = [amount + 1] * (amount + 1)
-        dp[0] = 0
-
-        for target in range(1, amount + 1):
-            for coin in coins:
-                if target - coin >= 0:
-                    dp[target] = min(dp[target], 1 + dp[target - coin])
-
-        if dp[amount] != amount + 1:
-            return dp[amount]
-        else:
+        if amount == 0:
+            return 0
+        
+        coins.sort(reverse=True)
+        res = 0
+        for coin in coins:
+            rem = amount // coin
+            mod = amount % coin
+            if rem > 0:
+                res = res + rem
+                print("""🧰   \x1b[1;31;40m322.coin-change-python3.py:15    rem:""") ## DELETEME:
+                print(rem, coin) ## DELETEME:
+                print('\x1b[0m') ## DELETEME:
+                amount = amount - (coin * rem)
+            if mod == 0:
+                break
+            print("""🙉   \x1b[1;30;43m322.coin-change-python3.py:18    amount:""") ## DELETEME:
+            print(amount) ## DELETEME:
+            print('\x1b[0m') ## DELETEME:
+        if amount > 0:
             return -1
+        return res
+            
 
 
 solution = Solution()
@@ -68,3 +79,21 @@ if result_3 == expected_output_3:
     print("✅ Expected Output")
 else:
     print("❌ Unexpected Output")
+
+
+# Test Case 4
+coins_4 = [186,419,83,408]
+amount_4 = 6249
+expected_output_4 = 20
+result_4 = solution.coinChange(coins_4, amount_4)
+
+print("\nTest Case 4:")
+print("Input:")
+print("coins:", coins_4)
+print("amount:", amount_4)
+print("Output:", result_4)
+
+if result_4 == expected_output_4:
+    print("✅ Expected Output")
+else:
+    print("❌ Unexpected Output\Expected: ", expected_output_4)

@@ -3,11 +3,9 @@ from typing import List
 # @leet start
 class Solution:
     def minCostClimbingStairs(self, cost: List[int]) -> int:
-        for idx in range(len(cost) - 3, -1, -1):
-            cost[idx] += min(cost[idx + 1], cost[idx + 2])
-
+        for idx in range(len(cost)-3, -1, -1):
+            cost[idx] += min(cost[idx + 1], cost[idx+2])
         return min(cost[0], cost[1])
-
 
 solution = Solution()
 
@@ -24,7 +22,7 @@ print("Output:", result_1)
 if result_1 == expected_output_1:
     print("✅ Expected Output")
 else:
-    print("❌ Unexpected Output")
+    print("❌ Unexpected Output \n Expected: " + str(expected_output_1))
 
 # Test Case 2
 input_cost_2 = [1, 100, 1, 1, 1, 100, 1, 1, 100, 1]
@@ -39,7 +37,7 @@ print("Output:", result_2)
 if result_2 == expected_output_2:
     print("✅ Expected Output")
 else:
-    print("❌ Unexpected Output")
+    print("❌ Unexpected Output \n Expected: " + str(expected_output_2))
 
 # Additional Test Case
 input_cost_3 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -54,5 +52,5 @@ print("Output:", result_3)
 if result_3 == expected_output_3:
     print("✅ Expected Output")
 else:
-    print("❌ Unexpected Output")
+    print("❌ Unexpected Output \n Expected: " + str(expected_output_3))
 # @leet end
