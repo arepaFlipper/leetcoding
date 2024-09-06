@@ -8,27 +8,34 @@ class Solution:
             total = total + num
         if total % 2:
             return False
+        
+        target = total/2
+        dp = []
+        dp.append(0)
 
-            target = total /2
-            return True
-
-            print("""🕒   \x1b[1;33;40m416.partition-equal-subset-sum-python3.py:9  total:""") ## DELETEME:
-            print(total) ## DELETEME:
-            print('\x1b[0m') ## DELETEME:
+        for num in nums:
+            next_dp = []
+            for val in dp:
+                if (val + num) == target:
+                    return True
+                next_dp.append(val +num)
+                next_dp.append(val)
+            dp = next_dp
+        return False
             
 # @leet end
 
-    solution = Solution()
+solution = Solution()
 
 # Test Case 1
-    nums1 = [1, 5, 11, 5]
-    expected_output_1 = True
+nums1 = [1, 5, 11, 5]
+expected_output_1 = True
 
-    print("Test Case 1:")
-    output_1 = solution.canPartition(nums1)
-    print("canPartition([1, 5, 11, 5]) => Output:", output_1)
+print("Test Case 1:")
+output_1 = solution.canPartition(nums1)
+print("canPartition([1, 5, 11, 5]) => Output:", output_1)
 
-    if output_1 == expected_output_1:
+if output_1 == expected_output_1:
     print("✅ Expected Output")
 else:
     print("❌ Unexpected Output")
