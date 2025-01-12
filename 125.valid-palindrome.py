@@ -4,20 +4,17 @@ import re
 class Solution:
     def isPalindrome(self, s: str) -> bool:
         string = self.alphabetic(s)
-        left = 0
-        right = len(string) - 1
-        mid = int(len(string) / 2)
-        sub_str = string[0:mid]
-        for char in sub_str:
-            print("""🪑   \x1b[1;34;40m125.valid-palindrome.py:12   char:""") ## DELETEME:
-            print(char,"!=", string[right]) ## DELETEME:
-            print('\x1b[0m') ## DELETEME:
-            if char != string[right]:
-                return False
-            left += 1
-            right -= 1
-
-        return True
+        print("""🤶   \x1b[1;33;40m125.valid-palindrome.py:7    string:""") ## DELETEME:
+        print(string) ## DELETEME:
+        print('\x1b[0m') ## DELETEME:
+        stack = ""
+        for char in string[::-1]:
+            stack += char
+        
+        if stack != string:
+            return False
+        else:
+            return True
 
     def alphabetic(self, string: str)-> str:
         res = ""

@@ -1,55 +1,41 @@
 I want you to write the tests to my code in python (Please don't solve it, I want to come up with the solution) in the same manner you've been doing early in this chat, here is my problem:
 
-      https://leetcode.com/problems/number-of-students-unable-to-eat-lunch/
-                                        
-                  1700. Number of Students Unable to Eat Lunch
-                 Easy │ 2458  254  │ 78.4% of 350.6K │ 󰛨 Hints
+                    https://leetcode.com/problems/search-in-a-binary-search-tree/
+                                                   
+                                 700. Search in a Binary Search Tree
+                                Easy  │ 6109  196  │ 81.1% of 1.3M
 
 
 
-The school cafeteria offers circular and square sandwiches at lunch break, referred to by numbers 0 and 1 respectively. All students stand in a queue. Each student either prefers square or circular sandwiches.
+You are given the root of a binary search tree (BST) and an integer val.
 
-The number of sandwiches in the cafeteria is equal to the number of students. The sandwiches are placed in a stack. At each step:
-
-	* If the student at the front of the queue prefers the sandwich on the top of the stack, they will take it and leave the queue.
-	
-	* Otherwise, they will leave it and go to the queue's end.
-
-This continues until none of the queue students want to take the top sandwich and are thus unable to eat.
-
-You are given two integer arrays students and sandwiches where sandwiches[i] is the type of the i^th sandwich in the stack (i = 0 is the top of the stack) and students[j] is the preference of the j^th student in the initial queue (j = 0 is the front of the queue). Return the number of students that are unable to eat.
+Find the node in the BST that the node's value equals val and return the subtree rooted with that node. If such a node does not exist, return null.
 
 
 
 󰛨 Example 1:
 
-	│ Input: students = [1,1,0,0], sandwiches = [0,1,0,1]
-	│ Output: 0 
-	│ Explanation:
-	│ - Front student leaves the top sandwich and returns to the end of the line making students = [1,0,0,1].
-	│ - Front student leaves the top sandwich and returns to the end of the line making students = [0,0,1,1].
-	│ - Front student takes the top sandwich and leaves the line making students = [0,1,1] and sandwiches = [1,0,1].
-	│ - Front student leaves the top sandwich and returns to the end of the line making students = [1,1,0].
-	│ - Front student takes the top sandwich and leaves the line making students = [1,0] and sandwiches = [0,1].
-	│ - Front student leaves the top sandwich and returns to the end of the line making students = [0,1].
-	│ - Front student takes the top sandwich and leaves the line making students = [1] and sandwiches = [1].
-	│ - Front student takes the top sandwich and leaves the line making students = [] and sandwiches = [].
-	│ Hence all students are able to eat.
+[img](https://assets.leetcode.com/uploads/2021/01/12/tree1.jpg)
+
+	│ Input: root = [4,2,7,1,3], val = 2
+	│ Output: [2,1,3]
 
 󰛨 Example 2:
 
-	│ Input: students = [1,1,1,0,0,1], sandwiches = [1,0,0,0,1,1]
-	│ Output: 3
+[img](https://assets.leetcode.com/uploads/2021/01/12/tree2.jpg)
+
+	│ Input: root = [4,2,7,1,3], val = 5
+	│ Output: []
 
 
 
  Constraints:
 
-	* 1 <= students.length, sandwiches.length <= 100
+	* The number of nodes in the tree is in the range [1, 5000].
 	
-	* students.length == sandwiches.length
+	* 1 <= Node.val <= 10^7
 	
-	* sandwiches[i] is 0 or 1.
+	* root is a binary search tree.
 	
-	* students[i] is 0 or 1.
+	* 1 <= val <= 10^7
 
