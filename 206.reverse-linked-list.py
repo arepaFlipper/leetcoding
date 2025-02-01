@@ -9,16 +9,22 @@ class ListNode:
 
 class Solution:
     def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:
-        (prev, current) = (None, head)
+        if not head:
+            return head
 
-        while current:
-            next_node = current.next
-            current.next = prev
-            prev = current
-            current = next_node
-        return prev
+        current_head = head
+
+        if current_head.next:
+            current_head = self.reverseList(current_head.next)
+            head.next.next = head
+
+        head.next = None
+        return current_head
+
+
         
 # @leet end
+
 
 # Helper functions to create a linked list from a list and to convert a linked list to a list
 def list_to_linked_list(arr):

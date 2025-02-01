@@ -1,66 +1,41 @@
-I want you to write the tests to my code in the same manner you've been doing early in this chat, here is my problem:
+I want you to write the tests to my code in python (Please don't solve it, I want to come up with the solution) in the same manner you've been doing early in this chat, here is my problem:
 
-        https://leetcode.com/problems/longest-palindromic-substring/
-                                      
-                      5. Longest Palindromic Substring
-            Medium  │ 29385  1793  │ 34.2% of 9.4M │ 󰛨 Hints
+                    https://leetcode.com/problems/search-in-a-binary-search-tree/
+                                                   
+                                 700. Search in a Binary Search Tree
+                                Easy  │ 6109  196  │ 81.1% of 1.3M
 
 
 
-Given a string s, return the longest palindromic substring in s.
+You are given the root of a binary search tree (BST) and an integer val.
+
+Find the node in the BST that the node's value equals val and return the subtree rooted with that node. If such a node does not exist, return null.
 
 
 
 󰛨 Example 1:
 
-	│ Input: s = "babad"
-	│ Output: "bab"
-	│ Explanation: "aba" is also a valid answer.
+[img](https://assets.leetcode.com/uploads/2021/01/12/tree1.jpg)
+
+	│ Input: root = [4,2,7,1,3], val = 2
+	│ Output: [2,1,3]
 
 󰛨 Example 2:
 
-	│ Input: s = "cbbd"
-	│ Output: "bb"
+[img](https://assets.leetcode.com/uploads/2021/01/12/tree2.jpg)
+
+	│ Input: root = [4,2,7,1,3], val = 5
+	│ Output: []
 
 
 
  Constraints:
 
-	* 1 <= s.length <= 1000
+	* The number of nodes in the tree is in the range [1, 5000].
 	
-	* s consist of only digits and English letters.
+	* 1 <= Node.val <= 10^7
+	
+	* root is a binary search tree.
+	
+	* 1 <= val <= 10^7
 
-
-
-
-
-
-The following is my solution to test:
-
-```py
-# @leet start
-class Solution:
-    def longestPalindrome(self, s: str) -> str:
-        res = ""
-        res_len = 0
-
-        for idx in range(len(s)):
-            (left, right) = (idx, idx)
-            while left >= 0 and right < len(s) and s[left] == s[right]:
-                if (right - left + 1 ) > res_len:
-                    res = s[left: right + 1]
-                    res_len = right - left + 1
-                left -= 1
-                right += 1
-
-            (left, right) = (idx, idx + 1)
-            while left >=0 and right < len(s) and s[left] == s[right]:
-                if (right - left + 1) > res_len:
-                    res = s[left : right +1 ]
-                    res_len = right - left + 1
-                left -= 1
-                right += 1
-
-        return res
-# @leet end
-```

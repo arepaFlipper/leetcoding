@@ -3,45 +3,19 @@ from typing import List
 # @leet start
 class Solution:
     def rob(self, nums: List[int]) -> int:
-        def robFrom(idx, memo):
-            # NOTE: Base case where there are no more houses left to rob
-            if idx >= len(nums):
-                return 0, []
-            
-            # NOTE: Check if we already have the result for this index.
+        (rob1, rob2) = (0,0)
 
-            if idx in memo:
-                return memo[idx]
-            
-            # NOTE: Rob the current house and move to the house two steps ahead
-            (rob_current, rob_current_list) = robFrom(idx + 2, memo)
-            rob_current += nums[idx]
-            rob_current_list = [idx] + rob_current_list
-
-
-            # NOTE: Skip the current house and move to the next house
-            (skip_current, skip_current_list) = robFrom(idx+1, memo)
-
-            if rob_current > skip_current:
-                result = (rob_current, rob_current_list)
-            else:
-                result = (skip_current, skip_current_list)
-
-            memo[idx] = result
-            print("""🐻   \x1b[1;33;40m198.house-robber-python3.py:25   memo:""") ## DELETEME:
-            print(memo) ## DELETEME:
-            print('\x1b[0m') ## DELETEME:
-
-            return result
-
-        memo = {}
-
-        (max_money, houses_robbed) = robFrom(0, memo)
-        print("""🦜   \x1b[1;32;40m198.house-robber-python3.py:40   houses_robbed:""") ## DELETEME:
-        print(houses_robbed) ## DELETEME:
-        print('\x1b[0m') ## DELETEME:
-        return max_money
-        
+        print("👉 nums:", nums)
+        for house in nums:
+            print("rob1:", rob1, ", rob2:", rob2)
+            # NOTE: Caculate what is the max revenue we can get by robbing until this point?
+            new_rob = max(house + rob1, rob2)
+            rob1 = rob2
+            rob2 = new_rob
+            print("house:", house,", new_rob:", new_rob, ", rob1:", rob1, ", rob2:", rob2)
+            # __import__('pdb').set_trace() ##DELETEME:
+        return new_rob
+         
 # @leet end
 
 # Test Case 1

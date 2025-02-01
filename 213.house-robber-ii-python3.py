@@ -2,16 +2,13 @@ from typing import List
 # @leet start
 class Solution:
     def rob(self, nums: List[int]) -> int:
-        return max(nums[0], self.helper(nums[1:]), self.helper(nums[:-1]))
+        rob1, rob2 = 0, 0
 
-    def helper(self, nums):
-        (rob1, rob2) = (0,0)
-        for house in nums:
-            temp = max (house + rob1, rob2)
+        for n in nums:
+            temp = max(n + rob1, rob2)
             rob1 = rob2
             rob2 = temp
         return rob2
-        
 # @leet end
 
 # Test Case 1

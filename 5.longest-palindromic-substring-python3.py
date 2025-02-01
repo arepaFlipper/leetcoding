@@ -1,48 +1,47 @@
 # @leet start
 class Solution:
     def longestPalindrome(self, s: str) -> str:
-        longest_palindrome = ""
-        longest_len = len (longest_palindrome)
-
-        def expandAroundCenter(start: int, end: int):
-            nonlocal longest_palindrome, longest_len
-            while (0 <= start) and (end < len(s)) and s[start] == s[end]:
-                if( end - start + 1) > longest_len:
-                    longest_palindrome = s[start: end + 1]
-                    longest_len = end - start + 1
-                start = start - 1
-                end = end + 1
+        print("""\x1b[1;33;40m s: """ , s) ## DELETEME:
+        print('\x1b[0m') ## DELETEME:
+        res = ""
+        res_len = 0
 
         for idx in range(len(s)):
-            # even
-            expandAroundCenter(idx, idx)
-            expandAroundCenter(idx, idx+1)
-            # odd
+            print("idx: " , idx) ## DELETEME:
+            (left, right) = (idx, idx)
+            while left >= 0 and right < len(s) and s[left] == s[right]:
+                print("(idx,idx) 👈 \n")
+                print("⬅️  left: ", left,", ➡️  right: ", right, "\n") ## DELETEME:
+                if (right - left + 1 ) > res_len:
+                    res = s[left: right + 1]
+                    res_len = right - left + 1
+                    print("💍 res: ",res, ", res_len: ", res_len,) 
+                left -= 1
+                right += 1
 
-        return longest_palindrome
+            (left, right) = (idx, idx + 1)
+            while left >=0 and right < len(s) and s[left] == s[right]:
+                print("(idx, idx + 1) 🫵\n")
+                print("↙️  left: ", left,", ↘️  right: ", right, "\n") ## DELETEME:
+                if (right - left + 1) > res_len:
+                    res = s[left : right +1 ]
+                    res_len = right - left + 1
+                    print("res: ",res, ", res_len: ", res_len, "\n") 
+                left -= 1
+                right += 1
 
-            
-
-
+        return res
 # @leet end
 
 
 # Test functions
-def test_longest_palindrome_case_6():
-    solution = Solution()
-    s = "abb"
-    expected = "bb"
-    result = solution.longestPalindrome(s)
-    assert result == expected, f"Expected {expected}, but got {result}"
-    print("Case 5 succeed 👍")
-
 def test_longest_palindrome_case_1():
     solution = Solution()
     s = "babad"
     expected = "bab"
     result = solution.longestPalindrome(s)
     assert result == expected or result == "aba", f"Expected {expected} or 'aba', but got {result}"
-    print("Case 1 succeed 👍")
+    print("res: ", result," Case 1 passed ✅")
 
 def test_longest_palindrome_case_2():
     solution = Solution()
@@ -50,7 +49,7 @@ def test_longest_palindrome_case_2():
     expected = "bb"
     result = solution.longestPalindrome(s)
     assert result == expected, f"Expected {expected}, but got {result}"
-    print("Case 2 succeed 👍")
+    print("res: ", result," Case 2 passed ✅")
 
 def test_longest_palindrome_case_3():
     solution = Solution()
@@ -58,7 +57,7 @@ def test_longest_palindrome_case_3():
     expected = "a"
     result = solution.longestPalindrome(s)
     assert result == expected, f"Expected {expected}, but got {result}"
-    print("Case 3 succeed 👍")
+    print("res: ", result," Case 3 passed ✅")
 
 def test_longest_palindrome_case_4():
     solution = Solution()
@@ -66,7 +65,7 @@ def test_longest_palindrome_case_4():
     expected = "a"
     result = solution.longestPalindrome(s)
     assert result == expected or result == "c", f"Expected {expected} or 'c', but got {result}"
-    print("Case 4 succeed 👍")
+    print("res: ", result," Case 4 passed ✅")
 
 def test_longest_palindrome_case_5():
     solution = Solution()
@@ -74,26 +73,24 @@ def test_longest_palindrome_case_5():
     expected = "racecar"
     result = solution.longestPalindrome(s)
     assert result == expected, f"Expected {expected}, but got {result}"
-    print("Case 5 succeed 👍")
+    print("res: ", result," Case 5 passed ✅")
 
-def test_longest_palindrome_case_7():
+def test_longest_palindrome_case_6():
     solution = Solution()
-    s = "jglknendplocymmvwtoxvebkekzfdhykknufqdkntnqvgfbahsljkobhbxkvyictzkqjqydczuxjkgecdyhixdttxfqmgksrkyvopwprsgoszftuhawflzjyuyrujrxluhzjvbflxgcovilthvuihzttzithnsqbdxtafxrfrblulsakrahulwthhbjcslceewxfxtavljpimaqqlcbrdgtgjryjytgxljxtravwdlnrrauxplempnbfeusgtqzjtzshwieutxdytlrrqvyemlyzolhbkzhyfyttevqnfvmpqjngcnazmaagwihxrhmcibyfkccyrqwnzlzqeuenhwlzhbxqxerfifzncimwqsfatudjihtumrtjtggzleovihifxufvwqeimbxvzlxwcsknksogsbwwdlwulnetdysvsfkonggeedtshxqkgbhoscjgpiel"
-    expected = "sknks"
+    s = "abcdeffedcba"
+    expected = "abcdeffedcba"
     result = solution.longestPalindrome(s)
     assert result == expected, f"Expected {expected}, but got {result}"
-    print("Case 7 succeed 👍")
-
+    print("res: ", result," Case 6 passed ✅")
 
 def main():
-    # Simulate running tests
-    test_longest_palindrome_case_7()
-    test_longest_palindrome_case_6()
+    # Run test cases
     test_longest_palindrome_case_1()
     test_longest_palindrome_case_2()
     test_longest_palindrome_case_3()
     test_longest_palindrome_case_4()
     test_longest_palindrome_case_5()
+    test_longest_palindrome_case_6()
 
 if __name__ == "__main__":
     main()
