@@ -3,60 +3,65 @@ import heapq
 
 class Solution:
     def lastStoneWeight(self, stones: List[int]) -> int:
-        heapq._heapify_max(stones)
+        negative_stones = [-stone for stone in stones]
+        heapq.heapify(negative_stones)
         
-        while len(stones)>1:
-            max_stone = heapq._heappop_max(stones)
-            diff = max_stone - stones[0]
-            if diff:
-                heapq._heapreplace_max(stones,diff)
-            else:
-                heapq._heappop_max(stones)
+        while len(negative_stones)>1:
+            heaviest_stone = heapq.heappop(negative_stones)
+            lighter_stone = heapq.heappop(negative_stones)
+            heapq.heappush(negative_stones, heaviest_stone - lighter_stone)
 
-        stones.append(0)
-        return stones[0]
+        return -negative_stones[0] 
 
 solution = Solution()
 
-# Test Case 1
-input_stones_1 = [2, 7, 4, 1, 8, 1]
-expected_output_1 = 1
-result_1 = solution.lastStoneWeight(input_stones_1)
+def test_last_stone_weight():
+    test_cases = [
+        {
+            "input": [2, 7, 4, 1, 8, 1],
+            "expected": 1,
+        },
+        {
+            "input": [1],
+            "expected": 1,
+        },
+        {
+            "input": [3, 3, 3],
+            "expected": 3,
+        },
+        {
+            "input": [10, 10, 10, 10],
+            "expected": 0,
+        },
+        {
+            "input": [5, 3, 8, 2, 9, 10],
+            "expected": 1,
+        },
+        {
+            "input": [9, 3, 2, 10],
+            "expected": 0,
+        },
+        {
+            "input": [7, 6, 7, 6, 9],
+            "expected": 3,
+        },
+        {
+            "input": [31, 26, 33, 21, 40],
+            "expected": 9,
+        },
+    ]
 
-print("Test Case 1:")
-print("Input:", input_stones_1)
-print("Output:", result_1)
+    for i, test in enumerate(test_cases):
+        result = solution.lastStoneWeight(test["input"])
 
-if result_1 == expected_output_1:
-    print("✅ Expected Output")
-else:
-    print("❌ Unexpected Output")
+        try:
+            assert result == test["expected"], f"Test {i + 1} failed: Expected {test['expected']}, got {result}"
+            print(f"Test {i + 1} passed! ✅")
+        except Exception as e:
+            print(f"Test {i + 1} failed with error: {e} ❌")
 
-# Test Case 2
-input_stones_2 = [1]
-expected_output_2 = 1
-result_2 = solution.lastStoneWeight(input_stones_2)
 
-print("\nTest Case 2:")
-print("Input:", input_stones_2)
-print("Output:", result_2)
-
-if result_2 == expected_output_2:
-    print("✅ Expected Output")
-else:
-    print("❌ Unexpected Output")
-
-# Test Case 3
-input_stones_3 = [5, 5, 5, 5]
-expected_output_3 = 0
-result_3 = solution.lastStoneWeight(input_stones_3)
-
-print("\nTest Case 3:")
-print("Input:", input_stones_3)
-print("Output:", result_3)
-
-if result_3 == expected_output_3:
-    print("✅ Expected Output")
-else:
-    print("❌ Unexpected Output")
+# Run tests
+if __name__ == "__main__":
+    test_last_stone_weight()
 
