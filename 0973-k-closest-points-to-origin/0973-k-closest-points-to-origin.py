@@ -3,70 +3,64 @@ from typing import List
 
 class Solution:
     def kClosest(self, points: List[List[int]], k: int) -> List[List[int]]:
-        min_heap = []
+        elements = []
+        result = []
+        squared_distances = []
         for (x,y) in points:
-            dist = (x**2) + (y**2)
-            min_heap.append((dist,x,y))
+            squrt_dist = (x**2) + (y**2)
+            squared_distances.append([squrt_dist, x, y])
 
-        heapq.heapify(min_heap)
-        res = []
+        heapq.heapify(squared_distances)
 
-        for _ in range(k):
-            (distance, x, y) = heapq.heappop(min_heap)
-            res.append((x,y))
+        elements = heapq.nsmallest(k, squared_distances)
 
-        return res
+        for el in elements:
+            (d, x, y) = el
+            result.append([x,y])
+        
+        return result
 
 solution = Solution()
 
-# Test Case 1
-input_points_1 = [[1, 3], [-2, 2]]
-input_k_1 = 1
-expected_output_1 = [[-2, 2]]
-result_1 = solution.kClosest(input_points_1, input_k_1)
+def test_k_closest():
+    test_cases = [
+        {
+            "input": {"points": [[1, 3], [-2, 2]], "k": 1},
+            "expected": [[-2, 2]],
+        },
+        {
+            "input": {"points": [[3, 3], [5, -1], [-2, 4]], "k": 2},
+            "expected": [[3, 3], [-2, 4]],  # Order may vary
+        },
+        {
+            "input": {"points": [[0, 1], [1, 0], [-1, -1]], "k": 2},
+            "expected": [[0, 1], [1, 0]],  # Order may vary
+        },
+        {
+            "input": {"points": [[10, 10], [-5, -5], [2, 2], [0, 0]], "k": 3},
+            "expected": [[0, 0], [2, 2], [-5, -5]],  # Order may vary
+        },
+        {
+            "input": {"points": [[10000, 10000], [-10000, -10000]], "k": 1},
+            "expected": [[-10000, -10000]],  # This is closer to origin
+        },
+        {
+            "input": {"points": [[1, 2], [2, 3], [3, 4]], "k": 3},
+            "expected": [[1, 2], [2, 3], [3, 4]],  # All are returned
+        },
+    ]
 
-print("Test Case 1:")
-print("Input:")
-print("Points:", input_points_1)
-print("k:", input_k_1)
-print("Output:", result_1)
+    for i, test in enumerate(test_cases):
+        result = Solution().kClosest(**test["input"])
 
-if result_1 == expected_output_1:
-    print("✅ Expected Output")
-else:
-    print("❌ Unexpected Output")
+        try:
+            assert sorted(result) == sorted(test["expected"]), f"Test {i + 1} failed: Expected {test['expected']}, got {result}"
+            print(f"Test {i + 1} passed! ✅")
+        except Exception as e:
+            print(f"Test {i + 1} failed with error: {e} ❌")
 
-# Test Case 2
-input_points_2 = [[3, 3], [5, -1], [-2, 4]]
-input_k_2 = 2
-expected_output_2 = [[3, 3], [-2, 4]]
-result_2 = solution.kClosest(input_points_2, input_k_2)
 
-print("\nTest Case 2:")
-print("Input:")
-print("Points:", input_points_2)
-print("k:", input_k_2)
-print("Output:", result_2)
-
-if result_2 == expected_output_2:
-    print("✅ Expected Output")
-else:
-    print("❌ Unexpected Output")
-
-# Test Case 3
-input_points_3 = [[0, 0], [1, 1], [2, 2], [3, 3]]
-input_k_3 = 3
-expected_output_3 = [[0, 0], [1, 1], [2, 2]]
-result_3 = solution.kClosest(input_points_3, input_k_3)
-
-print("\nTest Case 3:")
-print("Input:")
-print("Points:", input_points_3)
-print("k:", input_k_3)
-print("Output:", result_3)
-
-if result_3 == expected_output_3:
-    print("✅ Expected Output")
-else:
-    print("❌ Unexpected Output")
+# Run tests
+if __name__ == "__main__":
+    test_k_closest()
 
