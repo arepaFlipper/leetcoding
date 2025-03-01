@@ -4,71 +4,85 @@ from collections import deque
 
 class Solution:
     def numIslands(self, grid: List[List[str]]) -> int:
-        if not grid:
+        if len(grid) == 0:
             return 0
 
-        (ROWS, COLS) = len(grid), len(grid[0])
-        visited = set()
-        islands = 0
+        (ROWS, COLS) = (len(grid),len(grid[0]))
+        
+        queue = deque([])
+        visit = list()
+        count = 0
 
-        def bfs(r, c):
-            q = deque()
-            visited.add((r, c))
-            q.append((r, c))
-
-            while q:
-                (row, col) = q.popleft()
-                directions = [[1, 0], [-1, 0], [0, 1], [0, -1]]
-
-                for (dr, dc) in directions:
-                    (r, c) = (row + dr, col + dc)
-                    if r in range(ROWS) and c in range(COLS) and grid[r][c] == '1' and (r, c) not in visited:
-                        q.append((r, c))
-                        visited.add((r, c))
+        def flip(r,c):
+            if False \
+                or min(r,c)>=0 \
+                and r<ROWS  \
+                and c<COLS  \
+                and (r,c) not in visit \
+                and grid[r][c]== '1' \
+                or False:
+                grid[r][c]= '0'
+                visit.append((r,c))
+                flip(r-1, c)
+                flip(r+1, c)
+                flip(r, c-1)
+                flip(r, c+1)
 
         for r in range(ROWS):
             for c in range(COLS):
-                if grid[r][c] == "1" and (r, c) not in visited:
-                    bfs(r, c)
-                    islands += 1
-        return islands
+                if grid[r][c] == '1':
+                    count += 1
+                    flip(r,c)
+        return count
+
+
 # @leet end
 
 solution = Solution()
 
 # Test Case 1
-grid_1 = [
-    ["1", "1", "1", "1", "0"],
-    ["1", "1", "0", "1", "0"],
-    ["1", "1", "0", "0", "0"],
-    ["0", "0", "0", "0", "0"]
-]
-expected_output_1 = 1
+def test_num_islands():
+    test_cases = [
+        {
+            "grid": [
+                ["1", "1", "1", "1", "0"],
+                ["1", "1", "0", "1", "0"],
+                ["1", "1", "0", "0", "0"],
+                ["0", "0", "0", "0", "0"]
+            ],
+            "expected_output": 1
+        },
+        {
+            "grid": [
+                ["1", "1", "0", "0", "0"],
+                ["1", "1", "0", "0", "0"],
+                ["0", "0", "1", "0", "0"],
+                ["0", "0", "0", "1", "1"]
+            ],
+            "expected_output": 3
+        },
+        {
+            "grid": [],
+            "expected_output": 0
+        },
+        {
+            "grid": [
+                ["0", "0", "0", "0", "0"],
+                ["0", "1", "0", "0", "0"],
+                ["0", "0", "0", "1", "0"],
+                ["0", "0", "0", "0", "0"],
+            ],
+            "expected_output": 2
+        },
+    ]
 
-print("Test Case 1:")
-output_1 = solution.numIslands(grid_1)
-print(f"numIslands({grid_1}) => Output:", output_1)
+    for (idx,test) in enumerate(test_cases):
+        result = solution.numIslands(test["grid"])
+        try:
+            assert result == test["expected_output"], f"Test {idx + 1} failed. Expected {test['expected_output']}, but got {result}"
+            print(f"Test {idx + 1} passed! ✅")
+        except:
+            print(f"Test {idx + 1} failed. Expected {test['expected_output']}, ❌ but got {result}")
 
-if output_1 == expected_output_1:
-    print("✅ Expected Output")
-else:
-    print("❌ Unexpected Output")
-
-# Test Case 2
-grid_2 = [
-    ["1", "1", "0", "0", "0"],
-    ["1", "1", "0", "0", "0"],
-    ["0", "0", "1", "0", "0"],
-    ["0", "0", "0", "1", "1"]
-]
-expected_output_2 = 3
-
-print("\nTest Case 2:")
-output_2 = solution.numIslands(grid_2)
-print(f"numIslands({grid_2}) => Output:", output_2)
-
-if output_2 == expected_output_2:
-    print("✅ Expected Output")
-else:
-    print("❌ Unexpected Output")
-
+if __name__ == "__main__":
+    test_num_islands()
