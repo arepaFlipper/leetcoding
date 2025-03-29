@@ -19,23 +19,22 @@ class Solution:
 
         while q:
             (row, col, length) = q.popleft()
-            if (False 
-                or min(row,col) < 0
-                or max(row,col)>= N
-                # or (row,col) in visit
-                or grid[row][col]
+            if (True 
+                and min(row,col) >= 0
+                and max(row,col)< N
+                and grid[row][col] == 0
                 ):
-                print("""🦚   \x1b[1;33;40m1091.shortest-path-in-binary-matrix.py:27    row, col:""") ## DELETEME:
-                print(row, col) ## DELETEME:
+                
+                print("""🎖️   \x1b[1;33;40m1091.shortest-path-in-binary-matrix.py:22    row, col:""") ## DELETEME:
+                print("coor:",row, col) ## DELETEME:
                 print('\x1b[0m') ## DELETEME:
-                continue
-            if row == N-1 and col == N - 1: 
-                return length
+                if row == N-1 and col == N - 1: 
+                    return length # NOTE: If we get  reach the end
 
-            for (row_direction, col_direction) in directions:
-                if (row + row_direction, col + col_direction) not in visit:
-                    q.append((row + row_direction, col + col_direction, length + 1))
-                    visit.add((row + row_direction, col + col_direction))
+                for (row_direction, col_direction) in directions:
+                    if (row + row_direction, col + col_direction) not in visit:
+                        q.append((row + row_direction, col + col_direction, length + 1))
+                        visit.add((row + row_direction, col + col_direction))
         return -1
 
 def test_shortest_path():
@@ -122,11 +121,33 @@ def test_shortest_path():
                 [1, 0, 0, 0]
             ],
             "expected": 5
-        }
+        },
+        # Test 10: Large open grid (5x5)
+        {
+            "grid": [
+                [0, 0, 0, 0, 0],
+                [0, 0, 1, 1, 0],
+                [0, 1, 0, 1, 0],
+                [0, 1, 1, 0, 0],
+                [0, 0, 0, 0, 0]
+            ],
+            "expected": 5
+        },
+        # Test 11: Large open grid (5x5)
+        {
+            "grid": [
+                [0, 0, 0, 0, 0],
+                [0, 1, 0, 1, 0],
+                [0, 1, 0, 1, 0],
+                [0, 1, 1, 0, 0],
+                [0, 0, 0, 0, 0]
+            ],
+            "expected": 6
+        },
     ]
 
 
-    for i, test in enumerate(test_cases):
+    for i, test in enumerate([test_cases[-1]]):
         result = Solution()
         result = result.shortestPathBinaryMatrix(test["grid"])  # Call your BFS function
         try:

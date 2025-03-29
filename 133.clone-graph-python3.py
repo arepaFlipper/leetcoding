@@ -23,83 +23,91 @@ class Solution:
 
         return depth_first_search(node) if node else None
 
-solution = Solution()
+# @leet end
 
-# Test Case 1
-adjList_1 = [[2, 4], [1, 3], [2, 4], [1, 3]]
-expected_output_1 = [[2, 4], [1, 3], [2, 4], [1, 3]]
+def test_clone_graph():
+    test_cases = [
+        # Test 1: Basic case with 4 nodes (Example 1)
+        {
+            "adj_list": [[2, 4], [1, 3], [2, 4], [1, 3]],
+            "expected": [[2, 4], [1, 3], [2, 4], [1, 3]]
+        },
 
-print("Test Case 1:")
-graph_1 = Solution().cloneGraph(Node(1, [Node(2), Node(4)]))
-output_1 = []
-if graph_1:
-    visited_1 = set()
+        # Test 2: Single node with no neighbors
+        {
+            "adj_list": [[]],
+            "expected": [[]]
+        },
 
-    def traverse(node):
-        if node.val not in visited_1:
-            visited_1.add(node.val)
-            output_1.append([neighbor.val for neighbor in node.neighbors])
-            for neighbor in node.neighbors:
-                traverse(neighbor)
+        # Test 3: Empty graph (no nodes)
+        {
+            "adj_list": [],
+            "expected": []
+        },
 
-    traverse(graph_1)
+        # Test 4: Two connected nodes
+        {
+            "adj_list": [[2], [1]],
+            "expected": [[2], [1]]
+        },
 
-print(f"cloneGraph({adjList_1}) => Output:", output_1)
+        # Test 5: Three nodes forming a triangle
+        {
+            "adj_list": [[2, 3], [1, 3], [1, 2]],
+            "expected": [[2, 3], [1, 3], [1, 2]]
+        },
 
-if output_1 == expected_output_1:
-    print("✅ Expected Output")
-else:
-    print("❌ Unexpected Output")
+        # Test 6: Linearly connected nodes (chain)
+        {
+            "adj_list": [[2], [1, 3], [2, 4], [3]],
+            "expected": [[2], [1, 3], [2, 4], [3]]
+        }
+    ]
 
-# Test Case 2
-adjList_2 = [[]]
-expected_output_2 = [[]]
+    for i, test in enumerate(test_cases):
+        original_graph = build_graph(test["adj_list"])  # Convert adjacency list to graph
+        cloned_graph = Solution().cloneGraph(original_graph)  # Call your clone function
+        cloned_adj_list = graph_to_adj_list(cloned_graph)  # Convert back to adjacency list
 
-print("\nTest Case 2:")
-graph_2 = Solution().cloneGraph(Node(1, []))
-output_2 = []
-if graph_2:
-    visited_2 = set()
+        try:
+            assert cloned_adj_list == test["expected"], f"Test {i+1} failed: Expected {test['expected']}, got {cloned_adj_list}"
+            print(f"Test {i+1} passed! ✅")
+        except Exception as e:
+            print(f"Test {i+1} failed with error: {e} ❌")
 
-    def traverse(node):
-        if node.val not in visited_2:
-            visited_2.add(node.val)
-            output_2.append([neighbor.val for neighbor in node.neighbors])
-            for neighbor in node.neighbors:
-                traverse(neighbor)
 
-    traverse(graph_2)
+def build_graph(adj_list):
+    """Helper function to build a graph from an adjacency list."""
+    if not adj_list:
+        return None
 
-print(f"cloneGraph({adjList_2}) => Output:", output_2)
+    nodes = {i + 1: Node(i + 1) for i in range(len(adj_list))}
+    for i, neighbors in enumerate(adj_list):
+        nodes[i + 1].neighbors = [nodes[n] for n in neighbors]
 
-if output_2 == expected_output_2:
-    print("✅ Expected Output")
-else:
-    print("❌ Unexpected Output")
+    return nodes[1]
 
-# Test Case 3
-adjList_3 = []
-expected_output_3 = []
 
-print("\nTest Case 3:")
-graph_3 = Solution().cloneGraph(None)
-output_3 = []
-if graph_3:
-    visited_3 = set()
+def graph_to_adj_list(node):
+    """Helper function to convert a graph back into an adjacency list."""
+    if not node:
+        return []
 
-    def traverse(node):
-        if node.val not in visited_3:
-            visited_3.add(node.val)
-            output_3.append([neighbor.val for neighbor in node.neighbors])
-            for neighbor in node.neighbors:
-                traverse(neighbor)
+    visited = {}
+    queue = [node]
 
-    traverse(graph_3)
+    while queue:
+        curr = queue.pop(0)
+        if curr.val not in visited:
+            visited[curr.val] = [neighbor.val for neighbor in curr.neighbors]
+            for neighbor in curr.neighbors:
+                if neighbor.val not in visited:
+                    queue.append(neighbor)
 
-print(f"cloneGraph({adjList_3}) => Output:", output_3)
+    return [visited[i] if i in visited else [] for i in range(1, len(visited) + 1)]
 
-if output_3 == expected_output_3:
-    print("✅ Expected Output")
-else:
-    print("❌ Unexpected Output")
+
+# Run tests
+if __name__ == "__main__":
+    test_clone_graph()
 

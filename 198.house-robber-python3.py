@@ -3,18 +3,20 @@ from typing import List
 # @leet start
 class Solution:
     def rob(self, nums: List[int]) -> int:
-        (rob1, rob2) = (0,0)
+        if not nums:
+            return 0
+        
+        if len(nums) == 1:
+            return nums[0]
+    
+        cache = [0] * len(nums)
+        cache[0] = nums[0]
+        cache[1] = max(nums[0],nums[1])
 
-        print("👉 nums:", nums)
-        for house in nums:
-            print("rob1:", rob1, ", rob2:", rob2)
-            # NOTE: Caculate what is the max revenue we can get by robbing until this point?
-            new_rob = max(house + rob1, rob2)
-            rob1 = rob2
-            rob2 = new_rob
-            print("house:", house,", new_rob:", new_rob, ", rob1:", rob1, ", rob2:", rob2)
-            # __import__('pdb').set_trace() ##DELETEME:
-        return new_rob
+        for idx in range(2, len(nums)):
+            cache[idx] = max(cache[idx - 1], nums[idx] + cache[idx -2])
+
+        return cache[-1]
          
 # @leet end
 

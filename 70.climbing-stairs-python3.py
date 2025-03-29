@@ -1,9 +1,15 @@
 # @leet start
+
+
 class Solution:
     def climbStairs(self, n: int) -> int:
-        if n<=2:
-            return n
-        return self.climbStairs(n - 1) + self.climbStairs(n-2)
+        (first,second) = (1,1)
+
+        for index in range(n - 1):
+            temp = first
+            first = first + second
+            second = temp
+        return first
 
 
 solution = Solution()
