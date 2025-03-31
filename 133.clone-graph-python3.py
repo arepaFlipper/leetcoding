@@ -1,5 +1,6 @@
 # @leet start
 from typing import Optional, List, Dict
+from collections import deque
 
 # Definition for a Node.
 class Node:
@@ -9,20 +10,21 @@ class Node:
 
 class Solution:
     def cloneGraph(self, node: Optional['Node']) -> Optional['Node']:
-        old_to_new: Dict = {}
+        if not node:
+            return None
 
-        def depth_first_search(node):
-            if node in old_to_new:
-                return old_to_new[node]
+        old_to_new = {}
+        old_to_new[node] = Node(node.val)
+        queue = deque([node])
 
-            node_copied = Node(node.val)
-            old_to_new[node] = node_copied
-            for neighbor in node.neighbors:
-                node_copied.neighbors.append(depth_first_search(neighbor))
-            return node_copied
-
-        return depth_first_search(node) if node else None
-
+        while queue:
+            current = queue.popleft()
+            for neighbor in current.neighbors:
+                if neighbor not in old_to_new:
+                    old_to_new[neighbor] = Node(neighbor.val)
+                    queue.append(neighbor)
+                old_to_new[current].neighbors.append(old_to_new[neighbor])
+        return old_to_new[node]
 # @leet end
 
 def test_clone_graph():
