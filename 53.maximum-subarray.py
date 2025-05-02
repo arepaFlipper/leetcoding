@@ -1,57 +1,39 @@
 from typing import List
+
 # @leet start
 class Solution:
     def maxSubArray(self, nums: List[int]) -> int:
-        res: int = nums[0]
+        current_sum = 0
+        max_sum = nums[0]
 
-        total: int = 0
+        for num in nums:
+            current_sum = max(current_sum,0)
+            current_sum += num
+            max_sum = max(max_sum, current_sum)
+            print("🧳   \x1b[1;30;47m ","num", num, "max_sum: ",max_sum, "current_sum", current_sum) ## DELETEME:
+            print('\x1b[0m') ## DELETEME:
 
-        for n in nums:
-            total += n
-            res = max(res, total)
-            if total < 0:
-                total = 0
-            print("n: ", n, "total: ", total, "res: ", res)
+        return max_sum
 
-        return res
 # @leet end
-#
-# Test Case 1
-nums_1 = [-2, 1, -3, 4, -1, 2, 1, -5, 4]
-expected_output_1 = 6
 
-print("Test Case 1:")
-output_1 = Solution().maxSubArray(nums_1)
-print(f"maxSubArray({nums_1}) => Output:", output_1)
+# Define test cases as (input_list, expected_output)
+test_cases = [
+    ([4, -1, 2, -7, 3, 4], 7),
+    ([-2, 1, -3, 4, -1, 2, 1, -5, 4], 6),
+    ([1], 1),
+    ([5, 4, -1, 7, 8], 23),
+    ([-1, -2, -3, -4], -1),  # Edge case: all negative numbers
+    ([1, 2, 3, 4, 5], 15),   # Edge case: all positive numbers
+]
 
-if output_1 == expected_output_1:
-    print("✅ Expected Output")
-else:
-    print("❌ Unexpected Output")
-
-# Test Case 2
-nums_2 = [1]
-expected_output_2 = 1
-
-print("\nTest Case 2:")
-output_2 = Solution().maxSubArray(nums_2)
-print(f"maxSubArray({nums_2}) => Output:", output_2)
-
-if output_2 == expected_output_2:
-    print("✅ Expected Output")
-else:
-    print("❌ Unexpected Output")
-
-# Test Case 3
-nums_3 = [5, 4, -1, 7, 8]
-expected_output_3 = 23
-
-print("\nTest Case 3:")
-output_3 = Solution().maxSubArray(nums_3)
-print(f"maxSubArray({nums_3}) => Output:", output_3)
-
-if output_3 == expected_output_3:
-    print("✅ Expected Output")
-else:
-    print("❌ Unexpected Output")
+# Run the test cases
+for idx, (nums, expected) in enumerate(test_cases, 1):
+    print(f"\nTest Case {idx}:")
+    output = Solution().maxSubArray(nums)
+    print(f"maxSubArray({nums}) => Output: {output}")
+    if output == expected:
+        print("✅ Expected Output")
+    else:
+        print(f"❌ Unexpected Output (Expected: {expected})")
 
