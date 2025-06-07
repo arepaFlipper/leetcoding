@@ -19,32 +19,32 @@ class Solution:
                 if 0 <= nei_row < N and 0 <= nei_col < N and (nei_row, nei_col) not in visit:
                     visit.add((nei_row, nei_col))
                     heapq.heappush(min_heap, [max(time, grid[nei_row][nei_col]), nei_row, nei_col])
-
-
 # @leet end
-# Test Case 1
-grid_1 = [[0,2],[1,3]]
-expected_output_1 = 3
 
-print("Test Case 1:")
-output_1 = Solution().swimInWater(grid_1)
-print(f"swimInWater({grid_1}) => Output:", output_1)
 
-if output_1 == expected_output_1:
-    print("✅ Expected Output")
-else:
-    print("❌ Unexpected Output")
+# ---------- Vanilla test suite ----------
+test_cases = [
+    (
+        [[0, 2],
+         [1, 3]],                         # grid
+        3                                  # expected output
+    ),
+    (
+        [[0,  1,  2,  3,  4],
+         [24, 23, 22, 21, 5],
+         [12, 13, 14, 15, 16],
+         [11, 17, 18, 19, 20],
+         [10,  9,  8,  7,  6]],            # grid
+        16                                 # expected output
+    ),
+]
 
-# Test Case 2
-grid_2 = [[0,1,2,3,4],[24,23,22,21,5],[12,13,14,15,16],[11,17,18,19,20],[10,9,8,7,6]]
-expected_output_2 = 16
-
-print("\nTest Case 2:")
-output_2 = Solution().swimInWater(grid_2)
-print(f"swimInWater({grid_2}) => Output:", output_2)
-
-if output_2 == expected_output_2:
-    print("✅ Expected Output")
-else:
-    print("❌ Unexpected Output")
+for idx, (grid, expected) in enumerate(test_cases, start=1):
+    print(f"\nTest Case {idx}:")
+    output = Solution().swimInWater(grid)
+    print(f"swimInWater({grid}) => Output:", output)
+    if output == expected:
+        print("✅ Expected Output")
+    else:
+        print(f"❌ Unexpected Output (expected {expected})")
 
